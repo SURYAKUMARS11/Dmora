@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InstaResponder // Premium Auto-DM & Reply</title>
+    <!-- Google Fonts: Outfit & Space Grotesk for modern, techy feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fab fa-instagram gradient-icon"></i>
+                </div>
+                <div class="brand-name">
+                    <h2>InstaResponder</h2>
+                    <span>Auto-DM & Reply</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard-tab">
+                    <i class="fas fa-chart-line"></i> Dashboard & Logs
+                </button>
+                <button class="nav-item" data-tab="campaigns-tab">
+                    <i class="fas fa-bullhorn"></i> Campaigns
+                </button>
+                <button class="nav-item" data-tab="settings-tab">
+                    <i class="fas fa-sliders-h"></i> Bot Settings
+                </button>
+                <button class="nav-item" data-tab="setup-tab">
+                    <i class="fas fa-book-open"></i> Setup Guide
+                </button>
+            </nav>
+
+            <div class="bot-toggle-panel">
+                <div class="toggle-status">
+                    <span class="status-label">Bot Status</span>
+                    <span id="bot-status-badge" class="badge active-badge">ACTIVE</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="master-bot-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-title">
+                    <h1 id="page-title">Dashboard & Logs</h1>
+                    <p id="page-subtitle">Monitor and test your Instagram interactions in real-time</p>
+                </div>
+                <div class="header-actions">
+                    <div class="webhook-indicator">
+                        <span class="pulse-dot"></span>
+                        <span class="indicator-text">Webhook Listener Online</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: DASHBOARD & LOGS -->
+            <section id="dashboard-tab" class="tab-content active">
+                <!-- Stats Overview Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple-glow"><i class="fas fa-comment-dots"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Triggers</span>
+                            <h3 id="stat-triggers">0</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green-glow"><i class="fas fa-paper-plane"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Success Rate</span>
+                            <h3 id="stat-success-rate">0%</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pink-glow"><i class="fas fa-bolt"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Active Keywords</span>
+                            <h3 id="stat-keywords">None</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation & Logs Columns -->
+                <div class="dashboard-body">
+                    <!-- Left: Real-time logs -->
+                    <div class="logs-panel card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-terminal"></i> Activity Log</h3>
+                            <div class="card-actions">
+                                <button id="btn-clear-logs" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Clear Logs
+                                </button>
+                                <button id="btn-refresh-logs" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="logs-container" id="logs-list">
+                            <div class="empty-logs">
+                                <i class="fas fa-history"></i>
+                                <p>No logs found. Simulate a comment or receive webhooks to start logging.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Webhook Simulator -->
+                    <div class="simulator-panel card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-vial"></i> Test Simulator</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="section-description">Test your keywords, replies, and DM logic locally without deploying or waiting for comment events.</p>
+                            <form id="simulator-form" class="form-grid">
+                                <div class="form-group">
+                                    <label for="sim-username">Test Username</label>
+                                    <div class="input-icon">
+                                        <i class="fas fa-at"></i>
+                                        <input type="text" id="sim-username" value="john_doe" required placeholder="username">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sim-comment">Comment Text</label>
+                                    <div class="input-icon">
+                                        <i class="far fa-comment"></i>
+                                        <input type="text" id="sim-comment" value="Please send me the pdf!" required placeholder="e.g. pdf, sent, I want it!">
+                                    </div>
+                                    <span class="input-tip">Should contain one of your configured keywords.</span>
+                                </div>
+                                <div class="form-group">
+                                     <label for="sim-media-id">Instagram Media ID (Optional)</label>
+                                     <div class="input-icon">
+                                         <i class="fas fa-photo-video"></i>
+                                         <input type="text" id="sim-media-id" placeholder="e.g. 18082608749329613">
+                                     </div>
+                                     <span class="input-tip">Leave blank to simulate a default/generic post comment.</span>
+                                 </div>
+                                <div class="form-group-checkbox">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="sim-is-reply">
+                                        <span class="checkmark"></span>
+                                        Simulate as Sub-comment Reply (Child)
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-gradient btn-full">
+                                    <i class="fas fa-play"></i> Run Test Trigger
+                                </button>
+                            </form>
+                            
+                            <!-- API config alert -->
+                            <div id="sim-token-warning" class="alert-box alert-warning hide">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <strong>Access Token Missing!</strong>
+                                    <p>Simulating checks matches, but real API calls to Instagram will fail until you configure your Page Access Token in Bot Settings.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: CAMPAIGNS (POST-SPECIFIC AUTOMATIONS) -->
+            <section id="campaigns-tab" class="tab-content">
+                <div class="campaigns-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <div>
+                        <h2 style="font-family: 'Space Grotesk', sans-serif;">Instagram Posts Automation</h2>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Select any post/video from your Instagram account to configure custom comment triggers</p>
+                    </div>
+                    <div class="badge" id="media-source-indicator" style="background: rgba(138,43,226,0.15); border: 1px solid var(--border-glow); padding: 6px 12px; border-radius: 8px; font-weight: 500;">
+                        <i class="fas fa-sync fa-spin" style="margin-right: 6px;"></i> Loading Posts...
+                    </div>
+                </div>
+
+                <!-- Campaigns Posts Grid Container -->
+                <div class="posts-grid" id="posts-grid-container">
+                    <div class="empty-logs">
+                        <i class="fas fa-photo-video"></i>
+                        <p>No Instagram posts found. Make sure your account has uploaded posts or videos.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: BOT SETTINGS -->
+            <section id="settings-tab" class="tab-content">
+                <div class="card settings-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cog"></i> Configuration Panel</h3>
+                        <span class="header-tag">Changes take effect immediately</span>
+                    </div>
+                    <div class="card-body">
+                        <form id="settings-form">
+                            <!-- Meta Access Credentials -->
+                            <div class="form-section">
+                                <h4><i class="fas fa-key"></i> Meta API Authorization</h4>
+                                <div class="form-group">
+                                    <label for="pageAccessToken">Page Access Token</label>
+                                    <div class="input-wrapper">
+                                        <input type="password" id="pageAccessToken" placeholder="EAABw..." class="password-input">
+                                        <button type="button" class="toggle-password-btn" tabindex="-1">
+                                            <i class="far fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <span class="input-tip">Generated in your Meta App Settings. Must have permissions `instagram_manage_comments` and `instagram_business_manage_messages` / `pages_messaging`.</span>
+                                </div>
+                                <div class="form-grid-2">
+                                    <div class="form-group">
+                                        <label for="verifyToken">Webhook Verify Token</label>
+                                        <input type="text" id="verifyToken" required placeholder="my_secure_verify_token">
+                                        <span class="input-tip">Use this exact string when registering the Webhook in Meta developer portal.</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="instagramUsername">Your IG Username (Without @)</label>
+                                        <input type="text" id="instagramUsername" placeholder="e.g. my_brand_page">
+                                        <span class="input-tip">Required to prevent loops when the page comments on its own posts.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bot Actions & Rules -->
+                            <div class="form-section">
+                                <h4><i class="fas fa-robot"></i> Reply Automation Rules</h4>
+                                <div class="form-group">
+                                    <label for="keywords">Trigger Keywords (Comma separated)</label>
+                                    <input type="text" id="keywords" required placeholder="e.g. sent, pdf, link, ebook">
+                                    <span class="input-tip">If a comment contains any of these words (case-insensitive), the automation triggers.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="publicReply">Public Reply Message</label>
+                                    <input type="text" id="publicReply" required placeholder="Sent ✅ Follow me and check your DM.">
+                                    <span class="input-tip">The public comment the bot posts in response to the user. Keep it natural!</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="privateDM">Private DM Content</label>
+                                    <textarea id="privateDM" rows="4" required placeholder="Hey! Here is the content 👇..."></textarea>
+                                    <span class="input-tip">The direct message sent to the user. Insert your links, details or instructions.</span>
+                                </div>
+                                <div class="form-group-checkbox">
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" id="ignoreReplies" checked>
+                                        <span class="checkmark"></span>
+                                        Ignore comments that are replies to other comments
+                                    </label>
+                                    <span class="input-tip italic-tip">Highly recommended. Prevents auto-reply loops in sub-comment threads.</span>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="form-actions-bar">
+                                <button type="button" id="btn-reset-config" class="btn btn-secondary">Reset to Defaults</button>
+                                <button type="submit" class="btn btn-gradient"><i class="fas fa-save"></i> Save Configuration</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: SETUP GUIDE -->
+            <section id="setup-tab" class="tab-content">
+                <div class="card guide-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-directions"></i> Complete Step-by-Step Meta Setup Guide</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Horizontal Process Steps -->
+                        <div class="process-steps">
+                            <div class="step-indicator active" data-step="1">
+                                <div class="step-num">1</div>
+                                <span class="step-text">Accounts</span>
+                            </div>
+                            <div class="step-indicator" data-step="2">
+                                <div class="step-num">2</div>
+                                <span class="step-text">Meta App</span>
+                            </div>
+                            <div class="step-indicator" data-step="3">
+                                <div class="step-num">3</div>
+                                <span class="step-text">Token & Webhook</span>
+                            </div>
+                            <div class="step-indicator" data-step="4">
+                                <div class="step-num">4</div>
+                                <span class="step-text">Tunneling</span>
+                            </div>
+                        </div>
+
+                        <!-- Step Contents -->
+                        <div class="steps-content-container">
+                            <!-- Step 1 Content -->
+                            <div class="step-details active" id="step-1-details">
+                                <h3>1. Prepare Your Accounts</h3>
+                                <p>To automate Instagram with the Meta Graph API, you must link your Instagram page to a Facebook Page:</p>
+                                <ul class="guide-list">
+                                    <li><i class="fas fa-check-circle"></i> Convert your Instagram account to a <strong>Professional Account</strong> (either <em>Creator</em> or <em>Business</em>).</li>
+                                    <li><i class="fas fa-check-circle"></i> Create a <strong>Facebook Page</strong> for your business or brand.</li>
+                                    <li><i class="fas fa-check-circle"></i> In Instagram App, go to Settings &rarr; Creator Tools &rarr; Connect/Link a Page, and select your FB Page. Alternatively, link it via Meta Business Suite.</li>
+                                    <li><i class="fas fa-check-circle"></i> <strong>Crucial Option:</strong> In Instagram, go to <em>Settings &rarr; Privacy &rarr; Messages</em> and make sure **"Allow Access to Messages"** is turned <strong>ON</strong>. Without this, external apps cannot read or send DMs.</li>
+                                </ul>
+                                <div class="guide-nav-buttons">
+                                    <button class="btn btn-primary next-step" data-next="2">Next Step: Create Meta App <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 Content -->
+                            <div class="step-details" id="step-2-details">
+                                <h3>2. Create a Meta Developer Application</h3>
+                                <p>Set up an application on the Meta Developer Portal to access the Instagram endpoints:</p>
+                                <ul class="guide-list">
+                                    <li><i class="fas fa-check-circle"></i> Go to the <a href="https://developers.facebook.com/" target="_blank">Meta Developer Portal</a> and log in.</li>
+                                    <li><i class="fas fa-check-circle"></i> Click <strong>My Apps</strong> &rarr; <strong>Create App</strong>.</li>
+                                    <li><i class="fas fa-check-circle"></i> Select <strong>Other</strong> for Use Case, then select <strong>Business</strong> as App Type. Give it a name.</li>
+                                    <li><i class="fas fa-check-circle"></i> Under "Add products to your app", find <strong>Instagram Graph API</strong> and click <strong>Set Up</strong>.</li>
+                                    <li><i class="fas fa-check-circle"></i> Add <strong>Messenger</strong> product and click <strong>Set Up</strong> (needed for sending direct messages).</li>
+                                </ul>
+                                <div class="guide-nav-buttons">
+                                    <button class="btn btn-secondary prev-step" data-prev="1"><i class="fas fa-arrow-left"></i> Previous</button>
+                                    <button class="btn btn-primary next-step" data-next="3">Next Step: Configure Token <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 Content -->
+                            <div class="step-details" id="step-3-details">
+                                <h3>3. Obtain Page Access Token & Configure Webhooks</h3>
+                                <p>Link your Meta App to your Facebook Page to generate the required credentials:</p>
+                                <ul class="guide-list">
+                                    <li><i class="fas fa-check-circle"></i> In the App Dashboard sidebar, go to <strong>Messenger</strong> &rarr; <strong>Instagram Settings</strong>.</li>
+                                    <li><i class="fas fa-check-circle"></i> Under <strong>Access Tokens</strong>, link your Facebook Page. Click **Generate Token**.</li>
+                                    <li><i class="fas fa-check-circle"></i> Copy this generated token and paste it into the <strong>Page Access Token</strong> input in the <a href="#" onclick="switchTab('settings-tab'); return false;">Bot Settings</a> tab.</li>
+                                    <li><i class="fas fa-check-circle"></i> Under <strong>Webhooks</strong> in the app dashboard, click **Configure**.
+                                        <ul>
+                                            <li>Callback URL: your public HTTPS endpoint (e.g. `https://xxxx.ngrok-free.app/webhook`)</li>
+                                            <li>Verify Token: must match the <strong>Webhook Verify Token</strong> configured in your settings panel.</li>
+                                        </ul>
+                                    </li>
+                                    <li><i class="fas fa-check-circle"></i> Once verified, look under **Webhook fields** and click **Subscribe** next to <strong>comments</strong>.</li>
+                                </ul>
+                                <div class="guide-nav-buttons">
+                                    <button class="btn btn-secondary prev-step" data-prev="2"><i class="fas fa-arrow-left"></i> Previous</button>
+                                    <button class="btn btn-primary next-step" data-next="4">Next Step: Tunneling Local Server <i class="fas fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 Content -->
+                            <div class="step-details" id="step-4-details">
+                                <h3>4. Public Webhook Tunneling (ngrok)</h3>
+                                <p>Since Meta needs to send webhook requests to a public `https` URL, you need to expose your local server using a tunneling service like <strong>ngrok</strong> during development:</p>
+                                <ol class="guide-numbered-list">
+                                    <li>Download and install <a href="https://ngrok.com/" target="_blank">ngrok</a>.</li>
+                                    <li>Start your local Express server (port `3000` by default):
+                                        <pre class="code-block">npm run dev</pre>
+                                    </li>
+                                    <li>In a separate terminal, expose port 3000 using ngrok:
+                                        <pre class="code-block">ngrok http 3000</pre>
+                                    </li>
+                                    <li>ngrok will generate a forwarding URL like: <br>
+                                        <code>https://a4b1-80-120-40-5.ngrok-free.app</code>
+                                    </li>
+                                    <li>Copy that HTTPS URL, append <code>/webhook</code>, and use it as your Callback URL in Meta's Webhook Settings. E.g.:<br>
+                                        <code>https://a4b1-80-120-40-5.ngrok-free.app/webhook</code>
+                                    </li>
+                                </ol>
+                                <div class="alert-box alert-success" style="margin-top: 20px;">
+                                    <i class="fas fa-info-circle"></i>
+                                    <div>
+                                        <strong>Ready to Deploy?</strong>
+                                        <p>For production, deploy this server to cloud services like Render, Fly.io, or Heroku, configure your environment variables, and use their public HTTPS endpoint as the permanent webhook URL!</p>
+                                    </div>
+                                </div>
+                                <div class="guide-nav-buttons">
+                                    <button class="btn btn-secondary prev-step" data-prev="3"><i class="fas fa-arrow-left"></i> Previous</button>
+                                    <button class="btn btn-gradient" onclick="switchTab('dashboard-tab')">Back to Dashboard <i class="fas fa-home"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hide">
+        <i id="toast-icon" class="fas fa-info-circle"></i>
+        <span id="toast-message">Notification message here</span>
+    </div>
+
+    <!-- Campaign Editor Modal -->
+    <div id="campaign-modal" class="modal-overlay">
+        <div class="card modal-content-card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
+                <h3 id="campaign-form-title"><i class="fas fa-robot"></i> Configure Automation</h3>
+                <button type="button" id="btn-close-campaign-modal" style="background: none; border: none; color: var(--text-secondary); font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; outline: none;">&times;</button>
+            </div>
+            <div class="card-body">
+                <!-- Post Preview (Mini) -->
+                <div id="modal-post-preview" style="display: flex; gap: 15px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 20px;">
+                    <img id="modal-post-img" src="" alt="Thumbnail" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color);">
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--accent-pink); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Selected Post</span>
+                        <p id="modal-post-caption" style="font-size: 0.85rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 4px; line-height: 1.3;"></p>
+                    </div>
+                </div>
+
+                <form id="campaign-form">
+                    <input type="hidden" id="campaignId">
+                    <input type="hidden" id="campaignMediaId">
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="campaignName">Campaign Name</label>
+                        <input type="text" id="campaignName" required placeholder="e.g. Lead Magnet Video Automation">
+                    </div>
+
+                    <div class="form-group-checkbox" style="margin-bottom: 15px;">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="campaignTriggerOnAny">
+                            <span class="checkmark"></span>
+                            Trigger on <strong>any comment</strong> (No keyword required)
+                        </label>
+                    </div>
+                    
+                    <div class="form-group" id="campaignKeywordsGroup" style="margin-bottom: 15px;">
+                        <label for="campaignKeywords">Trigger Keywords (Comma separated)</label>
+                        <input type="text" id="campaignKeywords" placeholder="e.g. pdf, send, link">
+                        <span class="input-tip">If someone comments any of these words on this post, the DM will send.</span>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="campaignPublicReply">Public Comment Reply</label>
+                        <input type="text" id="campaignPublicReply" required placeholder="Sent! Check your DM 📬">
+                    </div>
+                    
+                    <div class="form-group-checkbox" style="margin-bottom: 15px;">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="campaignRequireFollow">
+                            <span class="checkmark"></span>
+                            Enable <strong>Follow Gate</strong> (Require user to follow your profile to get the resource)
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="campaignPrivateDMGroup" style="margin-bottom: 15px;">
+                        <label for="campaignPrivateDM" id="lblPrivateDM">Private DM Message</label>
+                        <textarea id="campaignPrivateDM" rows="4" required placeholder="Hey! Here is the link you requested..."></textarea>
+                    </div>
+
+                    <div class="form-group hide" id="campaignFollowFallbackGroup" style="margin-bottom: 20px;">
+                        <label for="campaignFollowFallbackDM">Private DM Message (If NOT Following)</label>
+                        <textarea id="campaignFollowFallbackDM" rows="4" placeholder="Hey! Thanks for commenting. Please follow my profile first, then comment again to unlock your resource!"></textarea>
+                        <span class="input-tip">This message is sent only to users who do not follow you yet.</span>
+                    </div>
+                    
+                    <div class="form-actions-bar" style="display: flex; justify-content: space-between; align-items: center; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: 15px;">
+                        <button type="button" id="btn-delete-campaign" class="btn btn-secondary" style="color: var(--color-error); border-color: rgba(255, 23, 68, 0.2);"><i class="fas fa-trash-alt"></i> Delete Automation</button>
+                        <div style="display: flex; gap: 15px;">
+                            <button type="button" id="btn-cancel-campaign" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-gradient"><i class="fas fa-save"></i> Save Rules</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

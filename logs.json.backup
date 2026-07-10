@@ -1,0 +1,1623 @@
+[
+  {
+    "id": "mrewpzmryd4yq",
+    "timestamp": "2026-07-10T12:23:39.939Z",
+    "type": "info",
+    "message": "Comment from @fail.ure02 on media 18083372756557172 did not match any trigger keywords for Default Rule.",
+    "details": null
+  },
+  {
+    "id": "mrewpzmpownwq",
+    "timestamp": "2026-07-10T12:23:39.937Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @fail.ure02: \"Github\"",
+    "details": null
+  },
+  {
+    "id": "mrewpzmno9zbo",
+    "timestamp": "2026-07-10T12:23:39.935Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mrewph7c4rrbc",
+    "timestamp": "2026-07-10T12:23:16.056Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrewph7bc3bgn",
+    "timestamp": "2026-07-10T12:23:16.055Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @startwith.surya: \"Got it, check your inbox! 📬\"",
+    "details": null
+  },
+  {
+    "id": "mrewph783uzxo",
+    "timestamp": "2026-07-10T12:23:16.052Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mrewmph2wj907",
+    "timestamp": "2026-07-10T12:21:06.806Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrewmph0forlx",
+    "timestamp": "2026-07-10T12:21:06.804Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @startwith.surya: \"Got it, check your inbox! 📬\"",
+    "details": null
+  },
+  {
+    "id": "mrewmpgxbdl82",
+    "timestamp": "2026-07-10T12:21:06.801Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mrewmn4utgxrw",
+    "timestamp": "2026-07-10T12:21:03.774Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewmjdpcwm7k",
+    "timestamp": "2026-07-10T12:20:58.909Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrewmj2no32vg",
+    "timestamp": "2026-07-10T12:20:58.511Z",
+    "type": "info",
+    "message": "Comment from @shakthisharaan on media 18083372756557172 did not match any trigger keywords for Default Rule.",
+    "details": null
+  },
+  {
+    "id": "mrewmj2leq8e3",
+    "timestamp": "2026-07-10T12:20:58.509Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @shakthisharaan: \"🙌\"",
+    "details": null
+  },
+  {
+    "id": "mrewmj2jsrme5",
+    "timestamp": "2026-07-10T12:20:58.507Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mrewl3dsjsl20",
+    "timestamp": "2026-07-10T12:19:51.520Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrewl321vn9g1",
+    "timestamp": "2026-07-10T12:19:51.097Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrewkw2m2dtev",
+    "timestamp": "2026-07-10T12:19:42.046Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrewkw2kje8g4",
+    "timestamp": "2026-07-10T12:19:42.044Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @startwith.surya: \"Got it, check your inbox! 📬\"",
+    "details": null
+  },
+  {
+    "id": "mrewkw2ho54io",
+    "timestamp": "2026-07-10T12:19:42.041Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mrewkszgbfqs1",
+    "timestamp": "2026-07-10T12:19:38.044Z",
+    "type": "info",
+    "message": "Comment from @hell__helll7 on media 18083372756557172 did not match any trigger keywords for Default Rule.",
+    "details": null
+  },
+  {
+    "id": "mrewkszepzrff",
+    "timestamp": "2026-07-10T12:19:38.042Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @hell__helll7: \"Github\"",
+    "details": null
+  },
+  {
+    "id": "mrewkszc2cxyr",
+    "timestamp": "2026-07-10T12:19:38.040Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mrewjiftoofay",
+    "timestamp": "2026-07-10T12:18:37.721Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiz0p9drjt",
+    "timestamp": "2026-07-10T12:18:12.553Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiygiavpnd",
+    "timestamp": "2026-07-10T12:18:11.826Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewixu8ixre5",
+    "timestamp": "2026-07-10T12:18:11.024Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewixeuru8m3",
+    "timestamp": "2026-07-10T12:18:10.470Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewix9opn5h6",
+    "timestamp": "2026-07-10T12:18:10.284Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiwrj17j28",
+    "timestamp": "2026-07-10T12:18:09.631Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiwodd6n5m",
+    "timestamp": "2026-07-10T12:18:09.517Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewivz0c4vel",
+    "timestamp": "2026-07-10T12:18:08.604Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewive748q1g",
+    "timestamp": "2026-07-10T12:18:07.855Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiutlaclwo",
+    "timestamp": "2026-07-10T12:18:07.113Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiu4fb53ci",
+    "timestamp": "2026-07-10T12:18:06.207Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewitiu61lg0",
+    "timestamp": "2026-07-10T12:18:05.430Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewislyauf7o",
+    "timestamp": "2026-07-10T12:18:04.246Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewis0iu9rjk",
+    "timestamp": "2026-07-10T12:18:03.474Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewirebdksar",
+    "timestamp": "2026-07-10T12:18:02.675Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiqttmv07j",
+    "timestamp": "2026-07-10T12:18:01.937Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiq7uqjxc3",
+    "timestamp": "2026-07-10T12:18:01.146Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewipmmj5hhb",
+    "timestamp": "2026-07-10T12:18:00.382Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewioz5tpi37",
+    "timestamp": "2026-07-10T12:17:59.537Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewioae6kxtn",
+    "timestamp": "2026-07-10T12:17:58.646Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewinn6li9rw",
+    "timestamp": "2026-07-10T12:17:57.810Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewin0m8lbpg",
+    "timestamp": "2026-07-10T12:17:56.998Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewimby8uh12",
+    "timestamp": "2026-07-10T12:17:56.110Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewilpqhzs5b",
+    "timestamp": "2026-07-10T12:17:55.310Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewil2yi3drm",
+    "timestamp": "2026-07-10T12:17:54.490Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewikefr2um8",
+    "timestamp": "2026-07-10T12:17:53.607Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewijq155n96",
+    "timestamp": "2026-07-10T12:17:52.729Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewij3ypgios",
+    "timestamp": "2026-07-10T12:17:51.934Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewiggdpawjf",
+    "timestamp": "2026-07-10T12:17:48.493Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mrewibpsho9we",
+    "timestamp": "2026-07-10T12:17:42.352Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres6qq9g57y1",
+    "timestamp": "2026-07-10T10:16:43.473Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres6pynpx5qj",
+    "timestamp": "2026-07-10T10:16:42.479Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres6plgm28wg",
+    "timestamp": "2026-07-10T10:16:42.004Z",
+    "type": "success",
+    "message": "Private DM sent successfully to @sury.a_sk!",
+    "details": {
+      "recipient_id": "1202570211947608",
+      "message_id": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDMzMjc2NzE0Nzk5OjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI2MjU2OTk1OTc3MTE5NTQ3OTozMjkwMzA2MjY3NDkyMDQ4MjYxNTM5NjM3MDExNDE1MDQwMAZDZD"
+    }
+  },
+  {
+    "id": "mres6ol7j13eb",
+    "timestamp": "2026-07-10T10:16:40.699Z",
+    "type": "success",
+    "message": "Try Again check passed! Instagram user @sury.a_sk is now following. Sending success resource...",
+    "details": null
+  },
+  {
+    "id": "mres6ol5hks8u",
+    "timestamp": "2026-07-10T10:16:40.697Z",
+    "type": "info",
+    "message": "Re-checked follow status for @sury.a_sk: FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mres6nsrfrgvd",
+    "timestamp": "2026-07-10T10:16:39.675Z",
+    "type": "info",
+    "message": "Checking follow status again for user 1202570211947608 (@sury.a_sk)...",
+    "details": null
+  },
+  {
+    "id": "mres6mxygn7os",
+    "timestamp": "2026-07-10T10:16:38.566Z",
+    "type": "info",
+    "message": "Received DM postback event from user 1202570211947608 with payload: \"TRY_AGAIN_CHECK:rule_mren1nx7a9dv3:18127106059733329\"",
+    "details": null
+  },
+  {
+    "id": "mres6mxxe1sex",
+    "timestamp": "2026-07-10T10:16:38.565Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres699udmqkc",
+    "timestamp": "2026-07-10T10:16:20.850Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mres5kvnkpgmh",
+    "timestamp": "2026-07-10T10:15:49.235Z",
+    "type": "error",
+    "message": "Failed to send private DM to @sury.a_sk: (#-1) The comment that you are trying to reply to already has a reply.",
+    "details": {
+      "message": "(#-1) The comment that you are trying to reply to already has a reply.",
+      "type": "OAuthException",
+      "code": -1,
+      "error_subcode": 2534023,
+      "fbtrace_id": "A11DUgEHsY_xAujor5oURyt"
+    }
+  },
+  {
+    "id": "mres5k30386j3",
+    "timestamp": "2026-07-10T10:15:48.204Z",
+    "type": "success",
+    "message": "Try Again check passed! Instagram user @sury.a_sk is now following. Sending success resource...",
+    "details": null
+  },
+  {
+    "id": "mres5k2xked0f",
+    "timestamp": "2026-07-10T10:15:48.201Z",
+    "type": "info",
+    "message": "Re-checked follow status for @sury.a_sk: FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mres5j7xxbtby",
+    "timestamp": "2026-07-10T10:15:47.085Z",
+    "type": "info",
+    "message": "Checking follow status again for user 1202570211947608 (@sury.a_sk)...",
+    "details": null
+  },
+  {
+    "id": "mres5i5il98jm",
+    "timestamp": "2026-07-10T10:15:45.702Z",
+    "type": "info",
+    "message": "Received DM postback event from user 1202570211947608 with payload: \"TRY_AGAIN_CHECK:rule_mren1nx7a9dv3:18127106059733329\"",
+    "details": null
+  },
+  {
+    "id": "mres5i5frpq6o",
+    "timestamp": "2026-07-10T10:15:45.699Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres5f794cy7q",
+    "timestamp": "2026-07-10T10:15:41.877Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres58ecpcqoh",
+    "timestamp": "2026-07-10T10:15:33.060Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres57jh4ka8j",
+    "timestamp": "2026-07-10T10:15:31.949Z",
+    "type": "success",
+    "message": "Follow Gate buttons template sent to @sury.a_sk!",
+    "details": {
+      "recipient_id": "1202570211947608",
+      "message_id": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDMzMjc2NzE0Nzk5OjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI2MjU2OTk1OTc3MTE5NTQ3OTozMjkwMzA2MTM3OTI4Mzc2ODY4MDY3OTU2MTExNDk0MzQ4OAZDZD"
+    }
+  },
+  {
+    "id": "mres576633h5i",
+    "timestamp": "2026-07-10T10:15:31.470Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mres57658eic5",
+    "timestamp": "2026-07-10T10:15:31.469Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @startwith.surya: \"Sent\"",
+    "details": null
+  },
+  {
+    "id": "mres5764vmpf5",
+    "timestamp": "2026-07-10T10:15:31.468Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mres562630oxi",
+    "timestamp": "2026-07-10T10:15:30.030Z",
+    "type": "info",
+    "message": "Follow status for @sury.a_sk: NOT FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mres553wknvf2",
+    "timestamp": "2026-07-10T10:15:28.796Z",
+    "type": "info",
+    "message": "Checking if Instagram user 1202570211947608 (@sury.a_sk) follows the business profile...",
+    "details": null
+  },
+  {
+    "id": "mres553tp6dl2",
+    "timestamp": "2026-07-10T10:15:28.793Z",
+    "type": "success",
+    "message": "Public reply sent successfully to @sury.a_sk!",
+    "details": {
+      "id": "18085576742435107"
+    }
+  },
+  {
+    "id": "mres51zeq03ee",
+    "timestamp": "2026-07-10T10:15:24.746Z",
+    "type": "info",
+    "message": "Attempting to send public reply to comment 18127106059733329...",
+    "details": null
+  },
+  {
+    "id": "mres51ze1o4we",
+    "timestamp": "2026-07-10T10:15:24.746Z",
+    "type": "success",
+    "message": "Trigger matched (type: Any Comment) in comment \"❤️\" by @sury.a_sk (Campaign: \"Book\")",
+    "details": null
+  },
+  {
+    "id": "mres51zdrwf0q",
+    "timestamp": "2026-07-10T10:15:24.745Z",
+    "type": "info",
+    "message": "Found post-specific automation rule for media 18092504771363564: \"Book\"",
+    "details": null
+  },
+  {
+    "id": "mres51zapsws3",
+    "timestamp": "2026-07-10T10:15:24.742Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @sury.a_sk: \"❤️\"",
+    "details": null
+  },
+  {
+    "id": "mres51z8q3mlg",
+    "timestamp": "2026-07-10T10:15:24.740Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "id",
+        "time",
+        "changes"
+      ]
+    }
+  },
+  {
+    "id": "mres4gfvhjxx3",
+    "timestamp": "2026-07-10T10:14:56.827Z",
+    "type": "error",
+    "message": "Failed to send private DM to @sury.a_sk: (#-1) The comment that you are trying to reply to already has a reply.",
+    "details": {
+      "message": "(#-1) The comment that you are trying to reply to already has a reply.",
+      "type": "OAuthException",
+      "code": -1,
+      "error_subcode": 2534023,
+      "fbtrace_id": "A39Hj2_HqEuUxgqzjVXwlqA"
+    }
+  },
+  {
+    "id": "mres4fyn3rgtn",
+    "timestamp": "2026-07-10T10:14:56.207Z",
+    "type": "success",
+    "message": "Try Again check passed! Instagram user @sury.a_sk is now following. Sending success resource...",
+    "details": null
+  },
+  {
+    "id": "mres4fylq9vyg",
+    "timestamp": "2026-07-10T10:14:56.205Z",
+    "type": "info",
+    "message": "Re-checked follow status for @sury.a_sk: FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mres4fbdkr6t5",
+    "timestamp": "2026-07-10T10:14:55.369Z",
+    "type": "info",
+    "message": "Checking follow status again for user 1202570211947608 (@sury.a_sk)...",
+    "details": null
+  },
+  {
+    "id": "mres4ejn8n523",
+    "timestamp": "2026-07-10T10:14:54.371Z",
+    "type": "info",
+    "message": "Received DM postback event from user 1202570211947608 with payload: \"TRY_AGAIN_CHECK:rule_mren1nx7a9dv3:18134057731594112\"",
+    "details": null
+  },
+  {
+    "id": "mres4ejlhhf80",
+    "timestamp": "2026-07-10T10:14:54.369Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres4af3rz4yw",
+    "timestamp": "2026-07-10T10:14:49.023Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mres4a3r25yog",
+    "timestamp": "2026-07-10T10:14:48.615Z",
+    "type": "info",
+    "message": "Received DM postback event from user 1202570211947608 with payload: \"TRY_AGAIN_CHECK:rule_mren1nx7a9dv3:18134057731594112\"",
+    "details": null
+  },
+  {
+    "id": "mres4a3ql4l44",
+    "timestamp": "2026-07-10T10:14:48.614Z",
+    "type": "info",
+    "message": "Received webhook event with object type: \"instagram\"",
+    "details": {
+      "hasEntry": true,
+      "entryCount": 1,
+      "firstEntryKeys": [
+        "time",
+        "id",
+        "messaging"
+      ]
+    }
+  },
+  {
+    "id": "mres42dtvz5yf",
+    "timestamp": "2026-07-10T10:14:38.609Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mres3ea9010lp",
+    "timestamp": "2026-07-10T10:14:07.377Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mres13jfqdmz7",
+    "timestamp": "2026-07-10T10:12:20.139Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mres13jd9cbw9",
+    "timestamp": "2026-07-10T10:12:20.137Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @startwith.surya: \"Sent\"",
+    "details": null
+  },
+  {
+    "id": "mres0nw3jom90",
+    "timestamp": "2026-07-10T10:11:59.859Z",
+    "type": "success",
+    "message": "Follow Gate buttons template sent to @sury.a_sk!",
+    "details": {
+      "recipient_id": "1202570211947608",
+      "message_id": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDMzMjc2NzE0Nzk5OjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI2MjU2OTk1OTc3MTE5NTQ3OTozMjkwMzA1NzQ2NTEwMzk1MjY4NjMxNjg5MzYzOTgwMjg4MAZDZD"
+    }
+  },
+  {
+    "id": "mres0makxpuht",
+    "timestamp": "2026-07-10T10:11:57.788Z",
+    "type": "info",
+    "message": "Follow status for @sury.a_sk: NOT FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mres0lffg7de1",
+    "timestamp": "2026-07-10T10:11:56.667Z",
+    "type": "info",
+    "message": "Checking if Instagram user 1202570211947608 (@sury.a_sk) follows the business profile...",
+    "details": null
+  },
+  {
+    "id": "mres0lfd2cl2x",
+    "timestamp": "2026-07-10T10:11:56.665Z",
+    "type": "success",
+    "message": "Public reply sent successfully to @sury.a_sk!",
+    "details": {
+      "id": "18126811249628866"
+    }
+  },
+  {
+    "id": "mres09rx4ai2l",
+    "timestamp": "2026-07-10T10:11:41.565Z",
+    "type": "info",
+    "message": "Attempting to send public reply to comment 18134057731594112...",
+    "details": null
+  },
+  {
+    "id": "mres09rwgp5ro",
+    "timestamp": "2026-07-10T10:11:41.564Z",
+    "type": "success",
+    "message": "Trigger matched (type: Any Comment) in comment \"😍\" by @sury.a_sk (Campaign: \"Book\")",
+    "details": null
+  },
+  {
+    "id": "mres09rvqnpmo",
+    "timestamp": "2026-07-10T10:11:41.563Z",
+    "type": "info",
+    "message": "Found post-specific automation rule for media 18092504771363564: \"Book\"",
+    "details": null
+  },
+  {
+    "id": "mres09rt20w7v",
+    "timestamp": "2026-07-10T10:11:41.561Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @sury.a_sk: \"😍\"",
+    "details": null
+  },
+  {
+    "id": "mrerznwzizals",
+    "timestamp": "2026-07-10T10:11:13.235Z",
+    "type": "success",
+    "message": "Successfully subscribed app to Page \"Underrated series\" webhooks!",
+    "details": null
+  },
+  {
+    "id": "mrerznay3mr45",
+    "timestamp": "2026-07-10T10:11:12.442Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Underrated series\" (101496899345794) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mrerzmllkpntx",
+    "timestamp": "2026-07-10T10:11:11.529Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mrerzjqflyspt",
+    "timestamp": "2026-07-10T10:11:07.815Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrerzjev870pz",
+    "timestamp": "2026-07-10T10:11:07.400Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrery9ck0xtdo",
+    "timestamp": "2026-07-10T10:10:07.700Z",
+    "type": "success",
+    "message": "Follow Gate buttons template sent to @sury.a_sk!",
+    "details": {
+      "recipient_id": "1202570211947608",
+      "message_id": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDMzMjc2NzE0Nzk5OjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI2MjU2OTk1OTc3MTE5NTQ3OTozMjkwMzA1NTM5OTE5MTMwNTcyNTY4MTM1NDg3NTYwMDg5NgZDZD"
+    }
+  },
+  {
+    "id": "mrery8v9vgq4q",
+    "timestamp": "2026-07-10T10:10:07.077Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrery8v5wvgf4",
+    "timestamp": "2026-07-10T10:10:07.073Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @startwith.surya: \"Sent\"",
+    "details": null
+  },
+  {
+    "id": "mrery7kbrhvgi",
+    "timestamp": "2026-07-10T10:10:05.387Z",
+    "type": "info",
+    "message": "Follow status for @sury.a_sk: NOT FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mrery4x62hiwb",
+    "timestamp": "2026-07-10T10:10:01.962Z",
+    "type": "info",
+    "message": "Checking if Instagram user 1202570211947608 (@sury.a_sk) follows the business profile...",
+    "details": null
+  },
+  {
+    "id": "mrery4x35m7kt",
+    "timestamp": "2026-07-10T10:10:01.959Z",
+    "type": "success",
+    "message": "Public reply sent successfully to @sury.a_sk!",
+    "details": {
+      "id": "18085716458646910"
+    }
+  },
+  {
+    "id": "mrery16lgno9g",
+    "timestamp": "2026-07-10T10:09:57.117Z",
+    "type": "info",
+    "message": "Attempting to send public reply to comment 18110696509956002...",
+    "details": null
+  },
+  {
+    "id": "mrery16kfgfxp",
+    "timestamp": "2026-07-10T10:09:57.116Z",
+    "type": "success",
+    "message": "Trigger matched (type: Any Comment) in comment \"🙌\" by @sury.a_sk (Campaign: \"Book\")",
+    "details": null
+  },
+  {
+    "id": "mrery16il8a9u",
+    "timestamp": "2026-07-10T10:09:57.114Z",
+    "type": "info",
+    "message": "Found post-specific automation rule for media 18092504771363564: \"Book\"",
+    "details": null
+  },
+  {
+    "id": "mrery16e89kpp",
+    "timestamp": "2026-07-10T10:09:57.110Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @sury.a_sk: \"🙌\"",
+    "details": null
+  },
+  {
+    "id": "mrerxdocsx687",
+    "timestamp": "2026-07-10T10:09:26.652Z",
+    "type": "success",
+    "message": "Successfully subscribed app to Page \"Underrated series\" webhooks!",
+    "details": null
+  },
+  {
+    "id": "mrerxchddfhvh",
+    "timestamp": "2026-07-10T10:09:25.105Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Underrated series\" (101496899345794) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mrerxbx32c2uw",
+    "timestamp": "2026-07-10T10:09:24.375Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mrerus91jq9v4",
+    "timestamp": "2026-07-10T10:07:25.573Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrerus8zfa6qv",
+    "timestamp": "2026-07-10T10:07:25.571Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @startwith.surya: \"Great! Check your messages 📨\"",
+    "details": null
+  },
+  {
+    "id": "mrerupagjf8tj",
+    "timestamp": "2026-07-10T10:07:21.736Z",
+    "type": "info",
+    "message": "Comment from @varshakannan1977 on media 18083372756557172 did not match any trigger keywords for Default Rule.",
+    "details": null
+  },
+  {
+    "id": "mrerupacnhl56",
+    "timestamp": "2026-07-10T10:07:21.732Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @varshakannan1977: \"Gitup\"",
+    "details": null
+  },
+  {
+    "id": "mrerkn5i23j2f",
+    "timestamp": "2026-07-10T09:59:32.406Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrerkn5dfye9e",
+    "timestamp": "2026-07-10T09:59:32.401Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @startwith.surya: \"Got it, check your inbox! 📬\"",
+    "details": null
+  },
+  {
+    "id": "mrerkk3iczk50",
+    "timestamp": "2026-07-10T09:59:28.446Z",
+    "type": "info",
+    "message": "Comment from @dragon_2026786 on media 18083372756557172 did not match any trigger keywords for Default Rule.",
+    "details": null
+  },
+  {
+    "id": "mrerkk3gs9pzc",
+    "timestamp": "2026-07-10T09:59:28.444Z",
+    "type": "info",
+    "message": "New comment received on media 18083372756557172 from @dragon_2026786: \"GitHub\"",
+    "details": null
+  },
+  {
+    "id": "mrerd8ioa0nvq",
+    "timestamp": "2026-07-10T09:53:46.848Z",
+    "type": "error",
+    "message": "Failed to subscribe app to Page webhooks: Unsupported post request. Object with ID '2194143521372290' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+    "details": {
+      "message": "Unsupported post request. Object with ID '2194143521372290' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+      "type": "GraphMethodException",
+      "code": 100,
+      "error_subcode": 33,
+      "fbtrace_id": "AmsMaf8tGRauo8Lfq_jNan7"
+    }
+  },
+  {
+    "id": "mrerd84e2a5uy",
+    "timestamp": "2026-07-10T09:53:46.334Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Suryakumar S\" (2194143521372290) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mrerd7fyzdmbf",
+    "timestamp": "2026-07-10T09:53:45.454Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mrerbjssmm3so",
+    "timestamp": "2026-07-10T09:52:28.156Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrerbfl2a6nrj",
+    "timestamp": "2026-07-10T09:52:22.694Z",
+    "type": "error",
+    "message": "Failed to subscribe app to Page webhooks: Unsupported post request. Object with ID '2194143521372290' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+    "details": {
+      "message": "Unsupported post request. Object with ID '2194143521372290' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+      "type": "GraphMethodException",
+      "code": 100,
+      "error_subcode": 33,
+      "fbtrace_id": "AWA3unPur8lWRcPMAbVmpq3"
+    }
+  },
+  {
+    "id": "mrerbfbyxoj5j",
+    "timestamp": "2026-07-10T09:52:22.366Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Suryakumar S\" (2194143521372290) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mrerbeyecrgxl",
+    "timestamp": "2026-07-10T09:52:21.878Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mrer9ohlgked5",
+    "timestamp": "2026-07-10T09:51:00.921Z",
+    "type": "error",
+    "message": "Failed to subscribe app to Page webhooks: Unsupported post request. Object with ID '2194143521372290' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+    "details": {
+      "message": "Unsupported post request. Object with ID '2194143521372290' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+      "type": "GraphMethodException",
+      "code": 100,
+      "error_subcode": 33,
+      "fbtrace_id": "AedYLRrIuNkM2HUXSjZYMGZ"
+    }
+  },
+  {
+    "id": "mrer9o7hydzg2",
+    "timestamp": "2026-07-10T09:51:00.557Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Suryakumar S\" (2194143521372290) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mrer9nwodf66p",
+    "timestamp": "2026-07-10T09:51:00.168Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mrer99n8r4uyb",
+    "timestamp": "2026-07-10T09:50:41.684Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mrequ4244kbhl",
+    "timestamp": "2026-07-10T09:38:54.604Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mrequ4216gi29",
+    "timestamp": "2026-07-10T09:38:54.601Z",
+    "type": "info",
+    "message": "New comment received on media 18087892853119071 from @startwith.surya: \"Great! Check your messages 📨\"",
+    "details": null
+  },
+  {
+    "id": "mrequ0x0ytiur",
+    "timestamp": "2026-07-10T09:38:50.532Z",
+    "type": "info",
+    "message": "Comment from @sammy_fsd on media 18087892853119071 did not match any trigger keywords for Default Rule.",
+    "details": null
+  },
+  {
+    "id": "mrequ0wxv1rph",
+    "timestamp": "2026-07-10T09:38:50.529Z",
+    "type": "info",
+    "message": "New comment received on media 18087892853119071 from @sammy_fsd: \"🙌\"",
+    "details": null
+  },
+  {
+    "id": "mreqopbf2nsbr",
+    "timestamp": "2026-07-10T09:34:42.220Z",
+    "type": "error",
+    "message": "Failed to subscribe app to Page webhooks: (#200) To subscribe to the messages field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_postbacks field, one of these permissions is needed: pages_messaging.\nTo subscribe to the message_reads field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_referrals field, one of these permissions is needed: pages_messaging.\nTo subscribe to the feed field, one of these permissions is needed: pages_manage_metadata",
+    "details": {
+      "message": "(#200) To subscribe to the messages field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_postbacks field, one of these permissions is needed: pages_messaging.\nTo subscribe to the message_reads field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_referrals field, one of these permissions is needed: pages_messaging.\nTo subscribe to the feed field, one of these permissions is needed: pages_manage_metadata",
+      "type": "OAuthException",
+      "code": 200,
+      "fbtrace_id": "AMV7cWTEKUhtnh7SrDvdCtN"
+    }
+  },
+  {
+    "id": "mreqoozcu5bzm",
+    "timestamp": "2026-07-10T09:34:41.784Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Underrated series\" (101496899345794) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mreqooi9hnsls",
+    "timestamp": "2026-07-10T09:34:41.169Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mreqogychpneh",
+    "timestamp": "2026-07-10T09:34:31.380Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mreqnyg97wu81",
+    "timestamp": "2026-07-10T09:34:07.401Z",
+    "type": "error",
+    "message": "Failed to subscribe app to Page webhooks: (#200) To subscribe to the messages field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_postbacks field, one of these permissions is needed: pages_messaging.\nTo subscribe to the message_reads field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_referrals field, one of these permissions is needed: pages_messaging.\nTo subscribe to the feed field, one of these permissions is needed: pages_manage_metadata",
+    "details": {
+      "message": "(#200) To subscribe to the messages field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_postbacks field, one of these permissions is needed: pages_messaging.\nTo subscribe to the message_reads field, one of these permissions is needed: pages_messaging.\nTo subscribe to the messaging_referrals field, one of these permissions is needed: pages_messaging.\nTo subscribe to the feed field, one of these permissions is needed: pages_manage_metadata",
+      "type": "OAuthException",
+      "code": 200,
+      "fbtrace_id": "Ah1sQ_D3uQ7ou6wefV_3Jg4"
+    }
+  },
+  {
+    "id": "mreqnxj95l0ll",
+    "timestamp": "2026-07-10T09:34:06.213Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Underrated series\" (101496899345794) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mreqnx5xhrp8y",
+    "timestamp": "2026-07-10T09:34:05.733Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mreqnjrdq08em",
+    "timestamp": "2026-07-10T09:33:48.361Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mreqn0ktjvwof",
+    "timestamp": "2026-07-10T09:33:23.501Z",
+    "type": "error",
+    "message": "Failed to subscribe app to Page webhooks: (#100) Param subscribed_fields[2] must be one of {feed, mention, name, picture, category, description, conversations, agent_messages, agent_questions, feature_access_list, inbox_labels, standby, message_mention, messages, message_reactions, messaging_account_linking, messaging_checkout_updates, messaging_customer_information, message_echoes, message_edits, message_deliveries, message_context, messaging_game_plays, messaging_optins, messaging_optouts, messaging_payments, messaging_postbacks, messaging_pre_checkouts, message_reads, messaging_referrals, messaging_handovers, messaging_policy_enforcement, marketing_message_delivery_failed, marketing_message_echoes, marketing_message_deliveries, marketing_message_clicks, marketing_message_reads, messaging_appointments, messaging_direct_sends, messaging_fblogin_account_linking, user_action, messaging_feedback, send_cart, group_feed, calls, call_permission_reply, call_settings_update, response_feedback, messaging_integrity, business_integrity, messaging_in_thread_lead_form_submit, message_template_status_update, founded, company_overview, mission, products, general_info, leadgen, leadgen_fat, leadgen_update, location, hours, parking, public_transit, page_about_story, mcom_invoice_change, invoice_access_invoice_change, invoice_access_invoice_draft_change, invoice_access_onboarding_status_active, invoice_access_bank_slip_events, local_delivery, phone, email, website, ratings, attire, payment_options, culinary_team, general_manager, price_range, awards, hometown, current_location, bio, affiliation, birthday, personal_info, personal_interests, members, checkins, page_upcoming_change, page_change_proposal, merchant_review, product_review, videos, live_videos, video_text_question_responses, registration, payment_request_update, publisher_subscriptions, invalid_topic_placeholder, marketing_messages_subscriber_upload_status, follow, story_share, comment_poll_response, story_poll_response} - got \"messaging_seen\".",
+    "details": {
+      "message": "(#100) Param subscribed_fields[2] must be one of {feed, mention, name, picture, category, description, conversations, agent_messages, agent_questions, feature_access_list, inbox_labels, standby, message_mention, messages, message_reactions, messaging_account_linking, messaging_checkout_updates, messaging_customer_information, message_echoes, message_edits, message_deliveries, message_context, messaging_game_plays, messaging_optins, messaging_optouts, messaging_payments, messaging_postbacks, messaging_pre_checkouts, message_reads, messaging_referrals, messaging_handovers, messaging_policy_enforcement, marketing_message_delivery_failed, marketing_message_echoes, marketing_message_deliveries, marketing_message_clicks, marketing_message_reads, messaging_appointments, messaging_direct_sends, messaging_fblogin_account_linking, user_action, messaging_feedback, send_cart, group_feed, calls, call_permission_reply, call_settings_update, response_feedback, messaging_integrity, business_integrity, messaging_in_thread_lead_form_submit, message_template_status_update, founded, company_overview, mission, products, general_info, leadgen, leadgen_fat, leadgen_update, location, hours, parking, public_transit, page_about_story, mcom_invoice_change, invoice_access_invoice_change, invoice_access_invoice_draft_change, invoice_access_onboarding_status_active, invoice_access_bank_slip_events, local_delivery, phone, email, website, ratings, attire, payment_options, culinary_team, general_manager, price_range, awards, hometown, current_location, bio, affiliation, birthday, personal_info, personal_interests, members, checkins, page_upcoming_change, page_change_proposal, merchant_review, product_review, videos, live_videos, video_text_question_responses, registration, payment_request_update, publisher_subscriptions, invalid_topic_placeholder, marketing_messages_subscriber_upload_status, follow, story_share, comment_poll_response, story_poll_response} - got \"messaging_seen\".",
+      "type": "OAuthException",
+      "code": 100,
+      "fbtrace_id": "AuDBh4tbgwgD9vO7gJ1nHiQ"
+    }
+  },
+  {
+    "id": "mreqn05xg8am1",
+    "timestamp": "2026-07-10T09:33:22.965Z",
+    "type": "info",
+    "message": "Subscribing app to Facebook Page \"Underrated series\" (101496899345794) webhooks...",
+    "details": null
+  },
+  {
+    "id": "mreqmzt283egw",
+    "timestamp": "2026-07-10T09:33:22.502Z",
+    "type": "info",
+    "message": "Configuration updated successfully",
+    "details": null
+  },
+  {
+    "id": "mreqly8njmrd6",
+    "timestamp": "2026-07-10T09:32:33.815Z",
+    "type": "info",
+    "message": "Server started on port 3000",
+    "details": null
+  },
+  {
+    "id": "mreqkzjg0u3xi",
+    "timestamp": "2026-07-10T09:31:48.844Z",
+    "type": "success",
+    "message": "Follow Gate buttons template sent to @sury.a_sk!",
+    "details": {
+      "recipient_id": "1202570211947608",
+      "message_id": "aWdfZAG1faXRlbToxOklHTWVzc2FnZAUlEOjE3ODQxNDMzMjc2NzE0Nzk5OjM0MDI4MjM2Njg0MTcxMDMwMTI0NDI2MjU2OTk1OTc3MTE5NTQ3OTozMjkwMzAxMjk5MjgyOTY4MTY3NjU0Mjg1MDI4OTg5MzM3NgZDZD"
+    }
+  },
+  {
+    "id": "mreqkz0gvted5",
+    "timestamp": "2026-07-10T09:31:48.160Z",
+    "type": "info",
+    "message": "Ignored comment from page owner (@startwith.surya) to prevent self-looping.",
+    "details": null
+  },
+  {
+    "id": "mreqkz0bewuqa",
+    "timestamp": "2026-07-10T09:31:48.155Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @startwith.surya: \"Sent\"",
+    "details": null
+  },
+  {
+    "id": "mreqky58wev28",
+    "timestamp": "2026-07-10T09:31:47.036Z",
+    "type": "info",
+    "message": "Follow status for @sury.a_sk: NOT FOLLOWING",
+    "details": null
+  },
+  {
+    "id": "mreqkx9zam9i6",
+    "timestamp": "2026-07-10T09:31:45.911Z",
+    "type": "info",
+    "message": "Checking if Instagram user 1202570211947608 (@sury.a_sk) follows the business profile...",
+    "details": null
+  },
+  {
+    "id": "mreqkx9vd63bg",
+    "timestamp": "2026-07-10T09:31:45.907Z",
+    "type": "success",
+    "message": "Public reply sent successfully to @sury.a_sk!",
+    "details": {
+      "id": "17960913602965995"
+    }
+  },
+  {
+    "id": "mreqkw1y7bhrc",
+    "timestamp": "2026-07-10T09:31:44.326Z",
+    "type": "info",
+    "message": "Attempting to send public reply to comment 18056262137519575...",
+    "details": null
+  },
+  {
+    "id": "mreqkw1v5lhey",
+    "timestamp": "2026-07-10T09:31:44.323Z",
+    "type": "success",
+    "message": "Trigger matched (type: Any Comment) in comment \"❤️🙌\" by @sury.a_sk (Campaign: \"Book\")",
+    "details": null
+  },
+  {
+    "id": "mreqkw1sz0auo",
+    "timestamp": "2026-07-10T09:31:44.320Z",
+    "type": "info",
+    "message": "Found post-specific automation rule for media 18092504771363564: \"Book\"",
+    "details": null
+  },
+  {
+    "id": "mreqkw1qw50tg",
+    "timestamp": "2026-07-10T09:31:44.318Z",
+    "type": "info",
+    "message": "New comment received on media 18092504771363564 from @sury.a_sk: \"❤️🙌\"",
+    "details": null
+  },
+  {
+    "id": "mreqkhtz4tybt",
+    "timestamp": "2026-07-10T09:31:25.895Z",
+    "type": "info",
+    "message": "Logs cleared by user",
+    "details": null
+  }
+]

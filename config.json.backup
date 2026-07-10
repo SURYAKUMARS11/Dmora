@@ -1,0 +1,24 @@
+{
+  "pageAccessToken": "EAA9ZBf4uFCucBR6lZB4SaPB4KxNXZCsyNHd8t96GqF1BAmKM7Bw27fXDlIVDiokaZBZBkG2yblLZBpfpeKna94RArCXdpn6ECV2o2SKShQeyZA8cIn5Fy7KZCZAgONaPmLExpjlCP1rsUOn7xZBUfnrkHPbZA7zc8PKUhJ87OALd0ZBu86l4rcvbUtYKbvoUgzZBdVZCR3eIMZD",
+  "verifyToken": "my_secure_verify_token_123",
+  "instagramUsername": "startwith.surya",
+  "keywords": "sent, pdf, link",
+  "publicReply": "Sent ✅ Follow me and check your DM.",
+  "privateDM": "Hey! Here is the content 👇\n\nhttps://example.com/your-pdf-link",
+  "isEnabled": true,
+  "ignoreReplies": true,
+  "rules": [
+    {
+      "id": "rule_mren1nx7a9dv3",
+      "name": "Book",
+      "mediaId": "18092504771363564",
+      "keywords": "",
+      "triggerOnAny": true,
+      "publicReply": "Sent",
+      "privateDM": "Thanks. here is the resources",
+      "requireFollow": true,
+      "followFallbackDM": "Opps. Follow me and chekc ur reosuces",
+      "isEnabled": true
+    }
+  ]
+}
