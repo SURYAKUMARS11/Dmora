@@ -41,6 +41,9 @@ function App() {
   const [logs, setLogs] = useState([]);
   const [expandedLogs, setExpandedLogs] = useState({});
 
+  // Analytics State
+  const [analytics, setAnalytics] = useState({ trend: [], campaigns: [] });
+
   // Simulator Form State
   const [simUsername, setSimUsername] = useState('john_doe');
   const [simComment, setSimComment] = useState('Please send me the pdf!');
@@ -233,6 +236,19 @@ function App() {
     }
   };
 
+  // Fetch Analytics
+  const loadAnalytics = async () => {
+    try {
+      const res = await fetchWithAuth('/api/analytics');
+      if (res.ok) {
+        const data = await res.json();
+        setAnalytics(data);
+      }
+    } catch (e) {
+      console.error('Error loading analytics:', e);
+    }
+  };
+
   // Run on mount
   useEffect(() => {
     checkAuthStatus();
@@ -245,9 +261,13 @@ function App() {
       loadCampaigns();
       loadMedia();
       loadLogs();
+      loadAnalytics();
 
-      // Poll logs every 2 seconds
-      const interval = setInterval(loadLogs, 2000);
+      // Poll logs & analytics every 3 seconds
+      const interval = setInterval(() => {
+        loadLogs();
+        loadAnalytics();
+      }, 3000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, token]);
@@ -319,7 +339,10 @@ function App() {
       });
       
       if (res.ok) {
-        setTimeout(loadLogs, 600);
+        setTimeout(() => {
+          loadLogs();
+          loadAnalytics();
+        }, 600);
       } else {
         showToast('Simulation failed to trigger', 'error');
       }
@@ -338,7 +361,10 @@ function App() {
       });
       
       if (response.ok) {
-        setTimeout(loadLogs, 600);
+        setTimeout(() => {
+          loadLogs();
+          loadAnalytics();
+        }, 600);
       } else {
         showToast('Failed to trigger postback simulation', 'error');
       }
@@ -418,6 +444,7 @@ function App() {
       if (res.ok && result.success) {
         showToast(`Automation rule saved for post successfully!`, 'success');
         setCampaigns(result.rules || []);
+        loadAnalytics(); // Refresh analytics table
         closeModal();
       } else {
         showToast(result.error || 'Failed to save rules', 'error');
@@ -438,6 +465,7 @@ function App() {
       if (res.ok && result.success) {
         showToast('Automation deleted successfully', 'info');
         setCampaigns(result.rules || []);
+        loadAnalytics();
         closeModal();
       } else {
         showToast(result.error || 'Failed to delete automation', 'error');
@@ -462,6 +490,217 @@ function App() {
   const successRate = totalTriggersCount > 0 
     ? Math.round((totalTriggersCount / (totalTriggersCount + errorTriggersCount)) * 100) 
     : 100;
+
+  // ---------------------------------------------------------
+  // RENDER METHOD: SVG Neon 7-Day Trend Chart
+  // ---------------------------------------------------------
+  const renderTrendChart = () => {
+    if (!analytics || !analytics.trend || analytics.trend.length === 0) return null;
+    const trend = analytics.trend;
+    
+    const width = 800;
+    const height = 180;
+    const padding = { top: 20, right: 30, bottom: 30, left: 45 };
+    
+    const maxVal = Math.max(...trend.map(d => Math.max(d.success, d.error)), 5) * 1.15;
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+    
+    // Calculate coordinates
+    const successPoints = trend.map((d, i) => {
+      const x = padding.left + (i * (chartWidth / (trend.length - 1)));
+      const y = padding.top + chartHeight - ((d.success / maxVal) * chartHeight);
+      return { x, y };
+    });
+
+    const errorPoints = trend.map((d, i) => {
+      const x = padding.left + (i * (chartWidth / (trend.length - 1)));
+      const y = padding.top + chartHeight - ((d.error / maxVal) * chartHeight);
+      return { x, y };
+    });
+
+    const getPathD = (points) => {
+      return points.reduce((acc, p, i) => i === 0 ? `M ${p.x} ${p.y}` : `${acc} L ${p.x} ${p.y}`, '');
+    };
+
+    const getAreaD = (points) => {
+      if (points.length === 0) return '';
+      const first = points[0];
+      const last = points[points.length - 1];
+      const pathD = getPathD(points);
+      return `${pathD} L ${last.x} ${padding.top + chartHeight} L ${first.x} ${padding.top + chartHeight} Z`;
+    };
+
+    const successPath = getPathD(successPoints);
+    const successArea = getAreaD(successPoints);
+    const errorPath = getPathD(errorPoints);
+    const errorArea = getAreaD(errorPoints);
+
+    return (
+      <div className="card" style={{ marginBottom: '30px' }}>
+        <div className="card-header">
+          <h3><i className="fas fa-chart-area"></i> 7-Day Bot Activity Trend</h3>
+          <span className="badge" style={{ background: 'rgba(138, 43, 226, 0.15)', color: 'var(--accent-pink)', border: '1px solid var(--border-glow)' }}>
+            Real-time Metrics
+          </span>
+        </div>
+        <div className="card-body" style={{ position: 'relative', overflowX: 'auto', padding: '20px 24px' }}>
+          <svg viewBox={`0 0 ${width} ${height}`} width="100%" height={height} style={{ overflow: 'visible' }}>
+            <defs>
+              <linearGradient id="successGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#00e676" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#00e676" stopOpacity="0.0" />
+              </linearGradient>
+              <linearGradient id="errorGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ff1744" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#ff1744" stopOpacity="0.0" />
+              </linearGradient>
+              <filter id="glow-success" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="glow-error" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Grid lines (horizontal) */}
+            {[0, 0.25, 0.5, 0.75, 1].map((ratio, idx) => {
+              const y = padding.top + ratio * chartHeight;
+              const val = Math.round(maxVal * (1 - ratio));
+              return (
+                <g key={idx}>
+                  <line x1={padding.left} y1={y} x2={width - padding.right} y2={y} stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+                  <text x={padding.left - 12} y={y + 4} fill="var(--text-muted)" fontSize="0.75rem" textAnchor="end">{val}</text>
+                </g>
+              );
+            })}
+
+            {/* X Axis Labels */}
+            {trend.map((d, i) => {
+              const x = padding.left + (i * (chartWidth / (trend.length - 1)));
+              return (
+                <text key={i} x={x} y={height - 8} fill="var(--text-muted)" fontSize="0.75rem" textAnchor="middle">
+                  {d.date}
+                </text>
+              );
+            })}
+
+            {/* Paths & Areas */}
+            {successArea && <path d={successArea} fill="url(#successGrad)" />}
+            {successPath && <path d={successPath} fill="none" stroke="#00e676" strokeWidth="2.5" filter="url(#glow-success)" strokeLinecap="round" />}
+            
+            {errorArea && <path d={errorArea} fill="url(#errorGrad)" />}
+            {errorPath && <path d={errorPath} fill="none" stroke="#ff1744" strokeWidth="2" filter="url(#glow-error)" strokeLinecap="round" />}
+
+            {/* Data Points Dots */}
+            {successPoints.map((p, i) => (
+              <circle key={`s-${i}`} cx={p.x} cy={p.y} r="4.5" fill="var(--bg-secondary)" stroke="#00e676" strokeWidth="2" title={`Success: ${trend[i].success}`} />
+            ))}
+            {errorPoints.map((p, i) => (
+              <circle key={`e-${i}`} cx={p.x} cy={p.y} r="3.5" fill="var(--bg-secondary)" stroke="#ff1744" strokeWidth="1.5" title={`Error: ${trend[i].error}`} />
+            ))}
+          </svg>
+
+          {/* Legend */}
+          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginTop: '15px', fontSize: '0.8rem' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#00e676' }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#00e676', display: 'inline-block' }}></span>
+              Successful Auto-DMs
+            </span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#ff1744' }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#ff1744', display: 'inline-block' }}></span>
+              Failed Messages / API Errors
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ---------------------------------------------------------
+  // RENDER METHOD: Campaign-Specific Performance Analytics Table
+  // ---------------------------------------------------------
+  const renderCampaignAnalyticsTable = () => {
+    if (!analytics || !analytics.campaigns || analytics.campaigns.length === 0) {
+      return (
+        <div className="card" style={{ marginBottom: '30px' }}>
+          <div className="card-header">
+            <h3><i className="fas fa-chart-bar"></i> Post-Specific Automation Performance</h3>
+          </div>
+          <div className="card-body" style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <i className="fas fa-bullhorn" style={{ fontSize: '2rem', opacity: '0.2', marginBottom: '10px', display: 'block' }}></i>
+            No active campaign automations found to track metrics.
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="card" style={{ marginBottom: '30px' }}>
+        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3><i className="fas fa-chart-bar"></i> Campaign-Specific Performance Analytics</h3>
+          <span className="badge" style={{ background: 'rgba(213,63,140,0.15)', color: 'var(--accent-pink)', border: '1px solid rgba(213,63,140,0.2)' }}>
+            Lifetime Conversions
+          </span>
+        </div>
+        <div className="card-body" style={{ padding: '0', overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}>
+                <th style={{ padding: '16px 24px' }}>Campaign Name</th>
+                <th style={{ padding: '16px' }}>Target Post ID</th>
+                <th style={{ padding: '16px', textAlign: 'center' }}>Total Comments</th>
+                <th style={{ padding: '16px', textAlign: 'center' }}>Successful DMs</th>
+                <th style={{ padding: '16px', textAlign: 'center' }}>Failed Replies</th>
+                <th style={{ padding: '16px 24px' }}>Conversion CTR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {analytics.campaigns.map((c) => {
+                const totalComm = c.triggerCount || 0;
+                const succDMs = c.successCount || 0;
+                const errDMs = c.errorCount || 0;
+                const conversionRate = totalComm > 0 
+                  ? Math.round((succDMs / totalComm) * 100) 
+                  : 100;
+                
+                return (
+                  <tr key={c._id || c.id} style={{ borderBottom: '1px solid var(--border-color)', transition: 'background var(--transition-fast)' }} className="table-row-hover">
+                    <td style={{ padding: '16px 24px', fontWeight: '600', color: 'var(--text-primary)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <i className="fas fa-bullhorn" style={{ color: 'var(--accent-pink)' }}></i>
+                        {c.name}
+                      </div>
+                    </td>
+                    <td style={{ padding: '16px', fontFamily: 'monospace', color: 'var(--text-muted)', fontSize: '0.8rem' }}>{c.mediaId}</td>
+                    <td style={{ padding: '16px', fontWeight: '700', color: 'var(--text-primary)', textAlign: 'center' }}>{totalComm}</td>
+                    <td style={{ padding: '16px', color: '#00e676', fontWeight: '600', textAlign: 'center' }}>{succDMs}</td>
+                    <td style={{ padding: '16px', color: errDMs > 0 ? '#ff1744' : 'var(--text-muted)', fontWeight: '600', textAlign: 'center' }}>{errDMs}</td>
+                    <td style={{ padding: '16px 24px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '60px', height: '6px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ width: `${conversionRate}%`, height: '100%', background: 'var(--accent-grad)', borderRadius: '3px' }}></div>
+                        </div>
+                        <span style={{ fontWeight: '700', color: 'var(--accent-pink)' }}>{conversionRate}%</span>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
 
   // ---------------------------------------------------------
   // RENDER: Loading State
@@ -753,6 +992,12 @@ function App() {
               </div>
             </div>
 
+            {/* Glowing 7-Day Bot Activity Trend Area Chart */}
+            {renderTrendChart()}
+
+            {/* Campaign-Specific Analytics Table */}
+            {renderCampaignAnalyticsTable()}
+
             {/* Simulation & Logs Columns */}
             <div className="dashboard-body">
               {/* Left: Real-time logs */}
@@ -1009,6 +1254,15 @@ function App() {
                               )}
                             </div>
                           </div>
+                          
+                          {campaignRule && (
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px' }}>
+                              <span>Triggers: <strong>{campaignRule.triggerCount || 0}</strong></span>
+                              <span>Sent: <strong style={{ color: '#00e676' }}>{campaignRule.successCount || 0}</strong></span>
+                              <span>Failed: <strong style={{ color: campaignRule.errorCount > 0 ? '#ff1744' : 'var(--text-muted)' }}>{campaignRule.errorCount || 0}</strong></span>
+                            </div>
+                          )}
+
                           <button 
                             onClick={() => openModal(post)} 
                             className={`btn btn-full ${campaignRule ? 'btn-primary' : 'btn-gradient'}`}

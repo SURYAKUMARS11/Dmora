@@ -64,6 +64,18 @@ const CampaignSchema = new mongoose.Schema({
   isEnabled: {
     type: Boolean,
     default: true
+  },
+  triggerCount: {
+    type: Number,
+    default: 0
+  },
+  successCount: {
+    type: Number,
+    default: 0
+  },
+  errorCount: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 

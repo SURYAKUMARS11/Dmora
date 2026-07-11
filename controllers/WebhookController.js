@@ -148,6 +148,16 @@ exports.processComment = async (comment) => {
 
     addLog('success', `Trigger matched (type: ${triggerOnAny ? 'Any Comment' : `Keyword "${matchedKeyword}"`}) in comment "${text}" by @${username} (${ruleName})`);
 
+    // Increment campaign-specific triggerCount
+    if (matchedRule) {
+      try {
+        matchedRule.triggerCount = (matchedRule.triggerCount || 0) + 1;
+        await matchedRule.save();
+      } catch (err) {
+        console.error('Error updating campaign triggerCount:', err);
+      }
+    }
+
     if (!config.pageAccessToken) {
       addLog('error', 'Cannot process replies because Meta Page Access Token is not configured!');
       return;
@@ -220,10 +230,24 @@ exports.processComment = async (comment) => {
 
     // 7. Send Private DM Reply (Success or Fallback with Buttons)
     if (isFollowing) {
-      await sendResourceDM(userId, matchedRule || config, config, comment_id, username);
+      const success = await sendResourceDM(userId, matchedRule || config, config, comment_id, username);
+      if (matchedRule) {
+        if (success) {
+          matchedRule.successCount = (matchedRule.successCount || 0) + 1;
+        } else {
+          matchedRule.errorCount = (matchedRule.errorCount || 0) + 1;
+        }
+        await matchedRule.save();
+      }
     } else {
       if (matchedRule) {
-        await sendFollowGateDM(userId, username, matchedRule, comment_id, config);
+        const success = await sendFollowGateDM(userId, username, matchedRule, comment_id, config);
+        if (success) {
+          matchedRule.successCount = (matchedRule.successCount || 0) + 1;
+        } else {
+          matchedRule.errorCount = (matchedRule.errorCount || 0) + 1;
+        }
+        await matchedRule.save();
       } else {
         await sendDM(userId, followFallbackDM, config, comment_id, username);
       }
@@ -468,10 +492,22 @@ async function handleMessagingEvent(event, config) {
     
     if (isFollowing) {
       addLog('success', `Try Again check passed! Instagram user @${username} is now following. Sending success resource...`);
-      await sendResourceDM(senderId, rule, config, null, username);
+      const success = await sendResourceDM(senderId, rule, config, null, username);
+      if (success) {
+        rule.successCount = (rule.successCount || 0) + 1;
+      } else {
+        rule.errorCount = (rule.errorCount || 0) + 1;
+      }
+      await rule.save();
     } else {
       addLog('warning', `Try Again check failed: Instagram user @${username} is still NOT following.`);
-      await sendFollowGateDM(senderId, username, rule, null, config);
+      const success = await sendFollowGateDM(senderId, username, rule, null, config);
+      if (success) {
+        rule.successCount = (rule.successCount || 0) + 1;
+      } else {
+        rule.errorCount = (rule.errorCount || 0) + 1;
+      }
+      await rule.save();
     }
   }
 }

@@ -6,6 +6,7 @@ const CampaignController = require('../controllers/CampaignController');
 const LogController = require('../controllers/LogController');
 const WebhookController = require('../controllers/WebhookController');
 const AuthController = require('../controllers/AuthController');
+const AnalyticsController = require('../controllers/AnalyticsController');
 
 // Public Authentication Routes
 router.get('/auth/status', AuthController.getAuthStatus);
@@ -26,6 +27,9 @@ router.delete('/campaigns/:id', CampaignController.deleteCampaign);
 
 // Instagram Media Endpoint
 router.get('/instagram/media', CampaignController.getInstagramMedia);
+
+// Analytics Routes
+router.get('/analytics', AnalyticsController.getAnalytics);
 
 // Execution Logs Routes
 router.get('/logs', LogController.getLogs);
