@@ -5,6 +5,15 @@ const ConfigController = require('../controllers/ConfigController');
 const CampaignController = require('../controllers/CampaignController');
 const LogController = require('../controllers/LogController');
 const WebhookController = require('../controllers/WebhookController');
+const AuthController = require('../controllers/AuthController');
+
+// Public Authentication Routes
+router.get('/auth/status', AuthController.getAuthStatus);
+router.post('/auth/setup', AuthController.setupAdmin);
+router.post('/auth/login', AuthController.login);
+
+// Protected Dashboard API Routes (Requires JWT verifyToken)
+router.use(AuthController.verifyToken);
 
 // Configuration Routes
 router.get('/config', ConfigController.getConfig);

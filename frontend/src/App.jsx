@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 
 function App() {
+  // Authentication State
+  const [token, setToken] = useState(localStorage.getItem('adminToken') || '');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
+  const [adminExists, setAdminExists] = useState(null); // null = loading, true/false = status
+
+  // Form Inputs for Auth
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authConfirmPassword, setAuthConfirmPassword] = useState('');
+
   // Navigation & UI state
   const [activeTab, setActiveTab] = useState('dashboard-tab');
   const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
@@ -66,10 +76,110 @@ function App() {
     }, 3000);
   };
 
+  // Helper: Wrapper for fetch with Authorization header injection and status handling
+  const fetchWithAuth = async (url, options = {}) => {
+    const headers = options.headers || {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    // Default Content-Type if not specified and body is present
+    if (options.body && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    const res = await fetch(url, { ...options, headers });
+    
+    if (res.status === 401) {
+      localStorage.removeItem('adminToken');
+      setToken('');
+      setIsAuthenticated(false);
+      showToast('Session expired. Please log in again.', 'error');
+      throw new Error('Unauthorized');
+    }
+    return res;
+  };
+
+  // Check auth status
+  const checkAuthStatus = async () => {
+    try {
+      const res = await fetch('/api/auth/status');
+      if (res.ok) {
+        const data = await res.json();
+        setAdminExists(data.exists);
+      }
+    } catch (e) {
+      console.error('Error checking auth status:', e);
+      setAdminExists(false); // fallback
+    }
+  };
+
+  // Handle Admin Setup Submit
+  const handleSetupAdminSubmit = async (e) => {
+    e.preventDefault();
+    if (authPassword !== authConfirmPassword) {
+      showToast('Passwords do not match!', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/auth/setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: authEmail, password: authPassword })
+      });
+      
+      const data = await res.json();
+      if (res.ok && data.success) {
+        localStorage.setItem('adminToken', data.token);
+        setToken(data.token);
+        setIsAuthenticated(true);
+        setAdminExists(true);
+        showToast('Admin account set up successfully!', 'success');
+      } else {
+        showToast(data.error || 'Failed to setup admin account', 'error');
+      }
+    } catch (err) {
+      showToast('Connection error during setup', 'error');
+    }
+  };
+
+  // Handle Admin Login Submit
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: authEmail, password: authPassword })
+      });
+      
+      const data = await res.json();
+      if (res.ok && data.success) {
+        localStorage.setItem('adminToken', data.token);
+        setToken(data.token);
+        setIsAuthenticated(true);
+        showToast('Logged in successfully!', 'success');
+      } else {
+        showToast(data.error || 'Invalid credentials', 'error');
+      }
+    } catch (err) {
+      showToast('Connection error during login', 'error');
+    }
+  };
+
+  // Log out
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    setToken('');
+    setIsAuthenticated(false);
+    showToast('Logged out successfully', 'info');
+  };
+
   // Fetch Config
   const loadConfig = async () => {
     try {
-      const res = await fetch('/api/config');
+      const res = await fetchWithAuth('/api/config');
       if (res.ok) {
         const data = await res.json();
         setConfig(data);
@@ -82,7 +192,7 @@ function App() {
   // Fetch Campaigns
   const loadCampaigns = async () => {
     try {
-      const res = await fetch('/api/campaigns');
+      const res = await fetchWithAuth('/api/campaigns');
       if (res.ok) {
         const data = await res.json();
         setCampaigns(data);
@@ -96,7 +206,7 @@ function App() {
   const loadMedia = async () => {
     setIsMediaLoading(true);
     try {
-      const res = await fetch('/api/instagram/media');
+      const res = await fetchWithAuth('/api/instagram/media');
       if (res.ok) {
         const result = await res.json();
         setMediaList(result.data || []);
@@ -113,7 +223,7 @@ function App() {
   // Fetch Logs
   const loadLogs = async () => {
     try {
-      const res = await fetch('/api/logs');
+      const res = await fetchWithAuth('/api/logs');
       if (res.ok) {
         const data = await res.json();
         setLogs(data);
@@ -125,15 +235,22 @@ function App() {
 
   // Run on mount
   useEffect(() => {
-    loadConfig();
-    loadCampaigns();
-    loadMedia();
-    loadLogs();
-
-    // Poll logs every 2 seconds
-    const interval = setInterval(loadLogs, 2000);
-    return () => clearInterval(interval);
+    checkAuthStatus();
   }, []);
+
+  // Fetch data when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadConfig();
+      loadCampaigns();
+      loadMedia();
+      loadLogs();
+
+      // Poll logs every 2 seconds
+      const interval = setInterval(loadLogs, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated, token]);
 
   // Handle Master Toggle Status
   const handleMasterToggle = async (e) => {
@@ -141,9 +258,8 @@ function App() {
     setConfig(prev => ({ ...prev, isEnabled: isChecked }));
     
     try {
-      const res = await fetch('/api/config', {
+      const res = await fetchWithAuth('/api/config', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isEnabled: isChecked })
       });
       if (res.ok) {
@@ -158,9 +274,8 @@ function App() {
   const handleSaveConfigSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/config', {
+      const res = await fetchWithAuth('/api/config', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(config)
       });
       
@@ -178,7 +293,7 @@ function App() {
   // Clear Logs
   const handleClearLogs = async () => {
     try {
-      const res = await fetch('/api/clear-logs', { method: 'POST' });
+      const res = await fetchWithAuth('/api/clear-logs', { method: 'POST' });
       if (res.ok) {
         setLogs([]);
         showToast('Activity logs cleared!', 'info');
@@ -193,9 +308,8 @@ function App() {
     e.preventDefault();
     try {
       showToast('Firing simulated comment webhook...', 'info');
-      const res = await fetch('/api/test-trigger', {
+      const res = await fetchWithAuth('/api/test-trigger', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: simUsername,
           text: simComment,
@@ -218,9 +332,8 @@ function App() {
   const triggerMockPostback = async (ruleId, commentId, userId, username) => {
     try {
       showToast('Simulating "Try Again" button click...', 'info');
-      const response = await fetch('/api/test-postback', {
+      const response = await fetchWithAuth('/api/test-postback', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ruleId, commentId, userId, username })
       });
       
@@ -296,9 +409,8 @@ function App() {
   const handleSaveCampaignSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/campaigns', {
+      const res = await fetchWithAuth('/api/campaigns', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(modalForm)
       });
       
@@ -319,7 +431,7 @@ function App() {
   const handleDeleteCampaign = async (campaignId) => {
     if (!window.confirm('Are you sure you want to delete automation rules for this post?')) return;
     try {
-      const res = await fetch(`/api/campaigns/${campaignId}`, {
+      const res = await fetchWithAuth(`/api/campaigns/${campaignId}`, {
         method: 'DELETE'
       });
       const result = await res.json();
@@ -351,6 +463,175 @@ function App() {
     ? Math.round((totalTriggersCount / (totalTriggersCount + errorTriggersCount)) * 100) 
     : 100;
 
+  // ---------------------------------------------------------
+  // RENDER: Loading State
+  // ---------------------------------------------------------
+  if (adminExists === null) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+        <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '2.5rem', color: 'var(--accent-pink)', marginBottom: '15px' }}></i>
+        <p style={{ fontFamily: 'Space Grotesk', fontWeight: '500', letterSpacing: '0.5px' }}>Initializing Access Control...</p>
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------
+  // RENDER: First Time Admin Setup
+  // ---------------------------------------------------------
+  if (!isAuthenticated && adminExists === false) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+        <div className="card" style={{ maxWidth: '420px', width: '100%', padding: '30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)' }}>
+          <div className="brand" style={{ justifyContent: 'center', marginBottom: '30px' }}>
+            <div className="brand-logo">
+              <i className="fab fa-instagram gradient-icon"></i>
+            </div>
+            <div className="brand-name">
+              <h2>InstaResponder</h2>
+              <span>Secure Setup</span>
+            </div>
+          </div>
+          
+          <h3 style={{ fontFamily: 'Space Grotesk', marginBottom: '10px', textAlign: 'center', fontSize: '1.25rem' }}>Create Admin Account</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '25px', lineHeight: 1.45 }}>
+            Initialize your self-hosted dashboard. Set up an administrative email and password to prevent unauthorized access.
+          </p>
+
+          <form onSubmit={handleSetupAdminSubmit} className="form-grid">
+            <div className="form-group">
+              <label htmlFor="setup-email">Admin Email Address</label>
+              <div className="input-icon">
+                <i className="fas fa-envelope"></i>
+                <input 
+                  type="email" 
+                  id="setup-email" 
+                  value={authEmail} 
+                  onChange={(e) => setAuthEmail(e.target.value)} 
+                  required 
+                  placeholder="admin@example.com"
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="setup-password">Secure Password</label>
+              <div className="input-icon">
+                <i className="fas fa-lock"></i>
+                <input 
+                  type="password" 
+                  id="setup-password" 
+                  value={authPassword} 
+                  onChange={(e) => setAuthPassword(e.target.value)} 
+                  required 
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+            <div className="form-group" style={{ marginBottom: '10px' }}>
+              <label htmlFor="setup-password-confirm">Confirm Password</label>
+              <div className="input-icon">
+                <i className="fas fa-lock"></i>
+                <input 
+                  type="password" 
+                  id="setup-password-confirm" 
+                  value={authConfirmPassword} 
+                  onChange={(e) => setAuthConfirmPassword(e.target.value)} 
+                  required 
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+            <button type="submit" className="btn btn-gradient btn-full">
+              <i className="fas fa-user-plus"></i> Initialize Account
+            </button>
+          </form>
+        </div>
+        {toast.show && (
+          <div className={`toast toast-${toast.type}`}>
+            <i className={
+              toast.type === 'success' ? 'fas fa-check-circle' :
+              toast.type === 'error' ? 'fas fa-exclamation-triangle' :
+              'fas fa-info-circle'
+            }></i>
+            <span>{toast.message}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------
+  // RENDER: Admin Login
+  // ---------------------------------------------------------
+  if (!isAuthenticated && adminExists === true) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+        <div className="card" style={{ maxWidth: '420px', width: '100%', padding: '30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)' }}>
+          <div className="brand" style={{ justifyContent: 'center', marginBottom: '30px' }}>
+            <div className="brand-logo">
+              <i className="fab fa-instagram gradient-icon"></i>
+            </div>
+            <div className="brand-name">
+              <h2>InstaResponder</h2>
+              <span>Locked Panel</span>
+            </div>
+          </div>
+          
+          <h3 style={{ fontFamily: 'Space Grotesk', marginBottom: '10px', textAlign: 'center', fontSize: '1.25rem' }}>Admin Dashboard Login</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '25px' }}>
+            Enter your credentials to unlock settings.
+          </p>
+
+          <form onSubmit={handleLoginSubmit} className="form-grid">
+            <div className="form-group">
+              <label htmlFor="login-email">Email Address</label>
+              <div className="input-icon">
+                <i className="fas fa-envelope"></i>
+                <input 
+                  type="email" 
+                  id="login-email" 
+                  value={authEmail} 
+                  onChange={(e) => setAuthEmail(e.target.value)} 
+                  required 
+                  placeholder="admin@example.com"
+                />
+              </div>
+            </div>
+            <div className="form-group" style={{ marginBottom: '10px' }}>
+              <label htmlFor="login-password">Password</label>
+              <div className="input-icon">
+                <i className="fas fa-lock"></i>
+                <input 
+                  type="password" 
+                  id="login-password" 
+                  value={authPassword} 
+                  onChange={(e) => setAuthPassword(e.target.value)} 
+                  required 
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+            <button type="submit" className="btn btn-gradient btn-full">
+              <i className="fas fa-sign-in-alt"></i> Unlock Dashboard
+            </button>
+          </form>
+        </div>
+        {toast.show && (
+          <div className={`toast toast-${toast.type}`}>
+            <i className={
+              toast.type === 'success' ? 'fas fa-check-circle' :
+              toast.type === 'error' ? 'fas fa-exclamation-triangle' :
+              'fas fa-info-circle'
+            }></i>
+            <span>{toast.message}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------
+  // RENDER: Authenticated Dashboard (Main Layout)
+  // ---------------------------------------------------------
   return (
     <div className="container">
       {/* Sidebar Navigation */}
@@ -389,6 +670,14 @@ function App() {
             onClick={() => setActiveTab('setup-tab')}
           >
             <i className="fas fa-book-open"></i> Setup Guide
+          </button>
+          
+          <button 
+            className="nav-item"
+            onClick={handleLogout}
+            style={{ marginTop: 'auto', color: 'var(--color-error)' }}
+          >
+            <i className="fas fa-sign-out-alt"></i> Log Out
           </button>
         </nav>
 
@@ -493,7 +782,7 @@ function App() {
                                            ' ' + date.toLocaleDateString([], { month: 'short', day: 'numeric' });
                       
                       const showDetailsToggle = log.details && Object.keys(log.details).length > 0;
-                      const isExpanded = !!expandedLogs[log.id];
+                      const isExpanded = !!expandedLogs[log.id || log._id];
 
                       return (
                         <div key={log.id || log._id} className={`log-item log-${log.type}`}>
@@ -527,7 +816,7 @@ function App() {
                             <>
                               <button 
                                 className="log-details-toggle"
-                                onClick={() => setExpandedLogs(prev => ({ ...prev, [log.id]: !isExpanded }))}
+                                onClick={() => setExpandedLogs(prev => ({ ...prev, [log.id || log._id]: !isExpanded }))}
                               >
                                 {isExpanded ? 'Hide Details' : 'View Details'}
                               </button>
@@ -947,6 +1236,12 @@ function App() {
                             keywords: 'sent, pdf, link',
                             publicReply: 'Sent ✅ Follow me and check your DM.',
                             privateDM: 'Hey! Here is the content 👇\n\nhttps://example.com/your-pdf-link',
+                            cardTitle: 'Your Resource is Ready! 🎉',
+                            cardSubtitle: 'Click the button below to download.',
+                            cardImage: '',
+                            cardButtonText: 'Download Now 📥',
+                            cardButtonUrl: '',
+                            useRichCard: false,
                             ignoreReplies: true
                           }));
                           showToast('Form reset to default templates.', 'info');
@@ -1230,18 +1525,6 @@ function App() {
                     placeholder="Sent! Check your DM 📬"
                   />
                 </div>
-                
-                <div className="form-group-checkbox" style={{ marginBottom: '15px' }}>
-                  <label className="checkbox-container">
-                    <input 
-                      type="checkbox" 
-                      checked={modalForm.requireFollow}
-                      onChange={(e) => setModalForm(prev => ({ ...prev, requireFollow: e.target.checked }))}
-                    />
-                    <span className="checkmark"></span>
-                    Enable <strong>Follow Gate</strong> (Require user to follow your profile to get the resource)
-                  </label>
-                </div>
 
                  <div className="form-group" style={{ marginBottom: '15px' }}>
                   <label htmlFor="campaignPrivateDM">
@@ -1381,7 +1664,7 @@ function App() {
                   
                   <div style={{ display: 'flex', gap: '15px' }}>
                     <button type="button" onClick={closeModal} className="btn btn-secondary">Cancel</button>
-                    <button type="submit" className="btn btn-gradient"><i class="fas fa-save"></i> Save Rules</button>
+                    <button type="submit" className="btn btn-gradient"><i className="fas fa-save"></i> Save Rules</button>
                   </div>
                 </div>
               </form>
