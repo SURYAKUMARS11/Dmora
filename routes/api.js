@@ -12,6 +12,7 @@ const AnalyticsController = require('../controllers/AnalyticsController');
 router.get('/auth/status', AuthController.getAuthStatus);
 router.post('/auth/setup', AuthController.setupAdmin);
 router.post('/auth/login', AuthController.login);
+router.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Protected Dashboard API Routes (Requires JWT verifyToken)
 router.use(AuthController.verifyToken);
