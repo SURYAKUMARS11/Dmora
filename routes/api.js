@@ -11,10 +11,16 @@ const AnalyticsController = require('../controllers/AnalyticsController');
 // Public Authentication Routes
 router.post('/auth/register', AuthController.register);
 router.post('/auth/login', AuthController.login);
+router.get('/auth/facebook/callback', AuthController.facebookCallback);
 router.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Protected Dashboard API Routes (Requires JWT verifyToken)
 router.use(AuthController.verifyToken);
+
+// Facebook OAuth Operations
+router.get('/auth/facebook', AuthController.getFacebookLoginUrl);
+router.get('/auth/facebook/pages', AuthController.getConnectedPages);
+router.post('/auth/facebook/activate', AuthController.activateInstagramPage);
 
 // Configuration Routes
 router.get('/config', ConfigController.getConfig);

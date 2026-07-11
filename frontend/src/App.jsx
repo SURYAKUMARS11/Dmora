@@ -12,6 +12,10 @@ function App() {
   const [authPassword, setAuthPassword] = useState('');
   const [authConfirmPassword, setAuthConfirmPassword] = useState('');
 
+  // Meta OAuth & Page Selector State
+  const [connectedPages, setConnectedPages] = useState([]);
+  const [isFetchingPages, setIsFetchingPages] = useState(false);
+
   // Navigation & UI state
   const [activeTab, setActiveTab] = useState('dashboard-tab');
   const [toast, setToast] = useState({ show: false, message: '', type: 'info' });
@@ -165,6 +169,94 @@ function App() {
     showToast('Logged out successfully', 'info');
   };
 
+  // Trigger Facebook OAuth connect
+  const handleFacebookConnect = async () => {
+    try {
+      showToast('Initiating Facebook secure connection...', 'info');
+      const res = await fetchWithAuth('/api/auth/facebook');
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url; // Redirect browser to Facebook OAuth dialog
+      } else {
+        showToast(data.error || 'Failed to generate connection link', 'error');
+      }
+    } catch (err) {
+      showToast('Error connecting to authentication server', 'error');
+    }
+  };
+
+  // Load connected Facebook pages (with Instagram accounts)
+  const loadConnectedPages = async () => {
+    setIsFetchingPages(true);
+    try {
+      const res = await fetchWithAuth('/api/auth/facebook/pages');
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setConnectedPages(data.pages || []);
+        if (data.pages?.length === 0) {
+          showToast('No Instagram business pages found linked to this Facebook account.', 'warning');
+        }
+      } else {
+        showToast(data.error || 'Failed to load Facebook Pages', 'error');
+        setConnectedPages([]);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Connection error loading pages list', 'error');
+    } finally {
+      setIsFetchingPages(false);
+    }
+  };
+
+  // Activate specific page and trigger webhook subscriptions
+  const handleActivatePage = async (page) => {
+    try {
+      showToast(`Activating bot for @${page.instagramAccount.username}...`, 'info');
+      const res = await fetchWithAuth('/api/auth/facebook/activate', {
+        method: 'POST',
+        body: JSON.stringify({
+          pageId: page.pageId,
+          pageAccessToken: page.pageAccessToken,
+          instagramAccountId: page.instagramAccount.id,
+          instagramUsername: page.instagramAccount.username
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showToast(`Bot activated successfully for @${page.instagramAccount.username}!`, 'success');
+        setConfig(data.config);
+        setConnectedPages([]); // Clear list
+      } else {
+        showToast(data.error || 'Activation failed', 'error');
+      }
+    } catch (err) {
+      showToast('Error activating bot connection', 'error');
+    }
+  };
+
+  // Disconnect active page
+  const handleDisconnectPage = async () => {
+    if (!window.confirm('Are you sure you want to disconnect your Instagram page? Your automations will stop.')) return;
+    try {
+      const res = await fetchWithAuth('/api/config', {
+        method: 'POST',
+        body: JSON.stringify({
+          pageAccessToken: '',
+          facebookPageId: '',
+          instagramBusinessId: '',
+          instagramUsername: '',
+          isEnabled: false
+        })
+      });
+      if (res.ok) {
+        showToast('Instagram page disconnected successfully.', 'info');
+        loadConfig();
+      }
+    } catch (err) {
+      showToast('Error disconnecting page', 'error');
+    }
+  };
+
   // Fetch Config
   const loadConfig = async () => {
     try {
@@ -172,6 +264,14 @@ function App() {
       if (res.ok) {
         const data = await res.json();
         setConfig(data);
+        // If Facebook connected but page not selected, load pages automatically
+        if (data.facebookPageId === '' && data.pageAccessToken === '') {
+          // Check if oauth_success is in url to load connected pages
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('oauth_success')) {
+            loadConnectedPages();
+          }
+        }
       }
     } catch (e) {
       console.error('Error loading config:', e);
@@ -234,6 +334,24 @@ function App() {
       console.error('Error loading analytics:', e);
     }
   };
+
+  // Handle URL parameters for Facebook OAuth redirect checks
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('oauth_success')) {
+      showToast('Facebook Account connected successfully!', 'success');
+      setActiveTab('settings-tab');
+      // Clean query parameters so they don't fire again on refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+      if (isAuthenticated) {
+        loadConfig();
+        loadConnectedPages();
+      }
+    } else if (urlParams.get('oauth_error')) {
+      showToast(`OAuth Connection Failed: ${urlParams.get('oauth_error').replace('_', ' ')}`, 'error');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [isAuthenticated]);
 
   // Fetch data when authenticated
   useEffect(() => {
@@ -1153,7 +1271,7 @@ function App() {
                       <i className="fas fa-exclamation-triangle"></i>
                       <div>
                         <strong>Access Token Missing!</strong>
-                        <p>Simulated checking will work, but real API calls to Instagram will fail until you enter your Page Access Token in Settings.</p>
+                        <p>Simulated checking will work, but real API calls to Instagram will fail until you connect your Instagram account in Settings.</p>
                       </div>
                     </div>
                   )}
@@ -1292,54 +1410,85 @@ function App() {
               </div>
               <div className="card-body">
                 <form onSubmit={handleSaveConfigSubmit}>
-                  {/* Meta Access Credentials */}
+                  {/* Meta Access Credentials (SaaS Facebook Connect selector panel) */}
                   <div className="form-section">
-                    <h4><i className="fas fa-key"></i> Meta API Authorization</h4>
-                    <div className="form-group">
-                      <label htmlFor="pageAccessToken">Page Access Token</label>
-                      <div className="input-wrapper">
-                        <input 
-                          type={showPassword ? 'text' : 'password'}
-                          id="pageAccessToken" 
-                          value={config.pageAccessToken || ''}
-                          onChange={(e) => setConfig(prev => ({ ...prev, pageAccessToken: e.target.value }))}
-                          placeholder="EAABw..." 
-                          className="password-input"
-                        />
-                        <button 
-                          type="button" 
-                          className="toggle-password-btn" 
-                          onClick={() => setShowPassword(prev => !prev)}
-                        >
-                          <i className={showPassword ? 'far fa-eye-slash' : 'far fa-eye'}></i>
+                    <h4><i className="fab fa-facebook-f"></i> Instagram Business Integration</h4>
+                    
+                    {config.instagramUsername ? (
+                      // Display Active Connected Account details
+                      <div className="alert-box alert-success" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '15px 20px', marginBottom: '25px', borderRadius: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                          <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glow)', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <i className="fab fa-instagram gradient-icon" style={{ fontSize: '1.5rem' }}></i>
+                          </div>
+                          <div>
+                            <strong style={{ fontSize: '0.98rem', display: 'block', color: 'var(--text-primary)' }}>Connected Account Active</strong>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                              Logged in as <a href={`https://instagram.com/${config.instagramUsername}`} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-pink)', fontWeight: '600' }}>@{config.instagramUsername}</a>
+                            </span>
+                          </div>
+                        </div>
+                        <button type="button" onClick={handleDisconnectPage} className="btn btn-secondary btn-sm" style={{ borderColor: 'rgba(255,23,68,0.2)', color: 'var(--color-error)' }}>
+                          <i className="fas fa-unlink"></i> Disconnect
                         </button>
                       </div>
-                      <span className="input-tip">Generated in your Meta Developer portal. Ensure it has the page scope permissions. Setting/changing this automatically triggers webhook registration!</span>
-                    </div>
-                    <div className="form-grid-2">
-                      <div className="form-group">
-                        <label htmlFor="verifyToken">Webhook Verify Token</label>
-                        <input 
-                          type="text" 
-                          id="verifyToken" 
-                          value={config.verifyToken || ''}
-                          onChange={(e) => setConfig(prev => ({ ...prev, verifyToken: e.target.value }))}
-                          required 
-                          placeholder="my_secure_verify_token"
-                        />
-                        <span className="input-tip">Must match the Verify Token used in the Webhooks setting on developers.facebook.com.</span>
+                    ) : (
+                      // Unconnected flow
+                      <div style={{ textAlign: 'center', padding: '30px 20px', background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glow)', borderRadius: '12px', marginBottom: '25px' }}>
+                        {connectedPages.length === 0 ? (
+                          <>
+                            <i className="fab fa-facebook-square" style={{ fontSize: '2.8rem', color: '#1877f2', marginBottom: '15px', display: 'block' }}></i>
+                            <h4 style={{ fontFamily: 'Space Grotesk', fontSize: '1.1rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Link Instagram with Dmora</h4>
+                            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '460px', margin: '0 auto 20px auto', lineHeight: 1.45 }}>
+                              Connect your Facebook Page linked to your Instagram Professional (Creator/Business) Account to start automating comments and direct messages in Dmora.
+                            </p>
+                            <button type="button" onClick={handleFacebookConnect} className="btn btn-gradient">
+                              <i className="fab fa-facebook-f"></i> Connect Instagram Account
+                            </button>
+                          </>
+                        ) : (
+                          // Page selection list
+                          <div style={{ textAlign: 'left' }}>
+                            <h4 style={{ fontFamily: 'Space Grotesk', fontSize: '1.05rem', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
+                              <i className="fas fa-tasks" style={{ color: 'var(--accent-pink)' }}></i>
+                              Select Connected Instagram Account to Automate:
+                            </h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                              {connectedPages.map((page) => (
+                                <div key={page.pageId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--accent-grad)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                      <i className="fab fa-instagram" style={{ color: 'white', fontSize: '1.1rem' }}></i>
+                                    </div>
+                                    <div>
+                                      <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)', display: 'block' }}>{page.instagramAccount.name}</strong>
+                                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>@{page.instagramAccount.username} (FB Page: {page.pageName})</span>
+                                    </div>
+                                  </div>
+                                  <button type="button" onClick={() => handleActivatePage(page)} className="btn btn-gradient btn-sm">
+                                    <i className="fas fa-check-circle"></i> Activate Bot
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="instagramUsername">Your IG Username (Without @)</label>
-                        <input 
-                          type="text" 
-                          id="instagramUsername" 
-                          value={config.instagramUsername || ''}
-                          onChange={(e) => setConfig(prev => ({ ...prev, instagramUsername: e.target.value }))}
-                          placeholder="e.g. startwith.surya"
-                        />
-                        <span className="input-tip">Required to prevent loops when the page comments on its own posts.</span>
-                      </div>
+                    )}
+                    
+                    {/* Public Verify Token (Still visible for webhook reference) */}
+                    <div className="form-group">
+                      <label htmlFor="verifyToken">Webhook Verify Token</label>
+                      <input 
+                        type="text" 
+                        id="verifyToken" 
+                        value={config.verifyToken || ''}
+                        onChange={(e) => setConfig(prev => ({ ...prev, verifyToken: e.target.value }))}
+                        required 
+                        placeholder="my_secure_verify_token"
+                        style={{ background: 'rgba(255,255,255,0.01)', borderStyle: 'dashed' }}
+                      />
+                      <span className="input-tip">Use this Verify Token in the Webhooks subscription panel inside your Meta Developer Console.</span>
                     </div>
                   </div>
 
