@@ -6,6 +6,9 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
   const [isRegistering, setIsRegistering] = useState(false); // Toggle signup vs login
 
+  // User Profile details (for tiering limits and user context)
+  const [userProfile, setUserProfile] = useState(null);
+
   // Form Inputs for Auth
   const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
@@ -257,6 +260,116 @@ function App() {
     }
   };
 
+  // Fetch Logged-In User Profile Details (for Subscription/Billing Limits)
+  const loadUserProfile = async () => {
+    try {
+      const res = await fetchWithAuth('/api/user/profile');
+      if (res.ok) {
+        const data = await res.json();
+        setUserProfile(data.user);
+      }
+    } catch (err) {
+      console.error('Error loading user profile:', err);
+    }
+  };
+
+  // Handle Subscription Upgrades with Razorpay (India First Checkout Flow)
+  const handleUpgradeSubscription = async () => {
+    try {
+      showToast('Creating subscription checkout...', 'info');
+      const res = await fetchWithAuth('/api/billing/subscribe', { method: 'POST' });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        showToast(data.error || 'Failed to create subscription', 'error');
+        return;
+      }
+
+      const { subscriptionId, planId, keyId, isMock } = data;
+
+      if (isMock) {
+        // Mock simulation upgrade flow
+        if (window.confirm('Razorpay is running in local Simulator Mode. Would you like to mock-approve this payment to upgrade to PRO?')) {
+          const verifyRes = await fetchWithAuth('/api/billing/verify', {
+            method: 'POST',
+            body: JSON.stringify({
+              isMock: true,
+              razorpay_subscription_id: subscriptionId
+            })
+          });
+          
+          if (verifyRes.ok) {
+            showToast('Subscription mock-payment verified! Upgraded to PRO successfully.', 'success');
+            loadUserProfile();
+          } else {
+            showToast('Mock-verification failed', 'error');
+          }
+        }
+      } else {
+        // Real Razorpay subscription integration
+        const loadScript = (src) => {
+          return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+          });
+        };
+
+        const scriptLoaded = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+        if (!scriptLoaded) {
+          showToast('Razorpay Checkout SDK failed to load. Check your internet connection.', 'error');
+          return;
+        }
+
+        const options = {
+          key: keyId,
+          subscription_id: subscriptionId,
+          name: 'Dmora',
+          description: 'Pro Plan Subscription (India)',
+          image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%238a2be2"/></svg>',
+          handler: async function (response) {
+            try {
+              showToast('Verifying subscription signature...', 'info');
+              const verifyRes = await fetchWithAuth('/api/billing/verify', {
+                method: 'POST',
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_subscription_id: response.razorpay_subscription_id,
+                  razorpay_signature: response.razorpay_signature,
+                  isMock: false
+                })
+              });
+              
+              if (verifyRes.ok) {
+                showToast('Payment verified successfully! You are now a PRO member.', 'success');
+                loadUserProfile();
+              } else {
+                showToast('Signature verification failed. Please contact support.', 'error');
+              }
+            } catch (err) {
+              showToast('Verification request failed', 'error');
+            }
+          },
+          prefill: {
+            email: userProfile?.email || '',
+            name: userProfile?.name || ''
+          },
+          theme: {
+            color: '#D53F8C'
+          }
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Error launching upgrade checkout portal', 'error');
+    }
+  };
+
   // Fetch Config
   const loadConfig = async () => {
     try {
@@ -266,7 +379,6 @@ function App() {
         setConfig(data);
         // If Facebook connected but page not selected, load pages automatically
         if (data.facebookPageId === '' && data.pageAccessToken === '') {
-          // Check if oauth_success is in url to load connected pages
           const urlParams = new URLSearchParams(window.location.search);
           if (urlParams.get('oauth_success')) {
             loadConnectedPages();
@@ -341,7 +453,6 @@ function App() {
     if (urlParams.get('oauth_success')) {
       showToast('Facebook Account connected successfully!', 'success');
       setActiveTab('settings-tab');
-      // Clean query parameters so they don't fire again on refresh
       window.history.replaceState({}, document.title, window.location.pathname);
       if (isAuthenticated) {
         loadConfig();
@@ -356,6 +467,7 @@ function App() {
   // Fetch data when authenticated
   useEffect(() => {
     if (isAuthenticated) {
+      loadUserProfile();
       loadConfig();
       loadCampaigns();
       loadMedia();
@@ -549,7 +661,9 @@ function App() {
         showToast(result.error || 'Failed to save rules', 'error');
       }
     } catch (err) {
-      showToast('Error saving campaign', 'error');
+      // Check if blocked by the tier limits gate
+      if (err.message === 'Unauthorized') return;
+      showToast('Error saving campaign rule. Limit reached on Free Tier!', 'error');
     }
   };
 
@@ -1034,11 +1148,55 @@ function App() {
           <button 
             className="nav-item"
             onClick={handleLogout}
-            style={{ marginTop: 'auto', color: 'var(--color-error)' }}
+            style={{ marginTop: '30px', color: 'var(--color-error)' }}
           >
             <i className="fas fa-sign-out-alt"></i> Log Out
           </button>
         </nav>
+
+        {/* Dynamic SaaS Billing Promotion Widget */}
+        {userProfile && (
+          <div style={{ marginTop: 'auto', padding: '10px' }}>
+            {userProfile.tier === 'pro' && userProfile.subscriptionStatus === 'active' ? (
+              // Pro Tier active
+              <div style={{
+                padding: '14px',
+                borderRadius: '12px',
+                background: 'rgba(0, 230, 118, 0.06)',
+                border: '1px solid rgba(0, 230, 118, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px'
+              }}>
+                <i className="fas fa-crown" style={{ color: '#ffb300', fontSize: '1.25rem' }}></i>
+                <div>
+                  <strong style={{ fontSize: '0.85rem', display: 'block', color: 'var(--text-primary)', fontFamily: 'Space Grotesk' }}>PRO Active</strong>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Unlimited campaigns</span>
+                </div>
+              </div>
+            ) : (
+              // Free tier - promote upgrade
+              <div style={{
+                padding: '14px',
+                borderRadius: '12px',
+                background: 'rgba(213, 63, 140, 0.06)',
+                border: '1px solid rgba(213, 63, 140, 0.15)'
+              }}>
+                <strong style={{ fontSize: '0.85rem', display: 'block', color: 'var(--text-primary)', marginBottom: '4px', fontFamily: 'Space Grotesk' }}>Free Tier Active</strong>
+                <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: '1.3', marginBottom: '10px' }}>
+                  Limit of 1 campaign. Upgrade to unlock unlimited automations.
+                </p>
+                <button 
+                  onClick={handleUpgradeSubscription} 
+                  className="btn btn-gradient btn-sm btn-full"
+                  style={{ padding: '8px', fontSize: '0.78rem', minHeight: 'auto' }}
+                >
+                  <i className="fas fa-crown"></i> Upgrade to PRO
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="bot-toggle-panel">
           <div className="toggle-status">
@@ -1340,7 +1498,6 @@ function App() {
                             src={getMediaSrc(post)} 
                             alt="Post Media" 
                             onError={(e) => {
-                              // If image fails, use visual placeholder gradient
                               e.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop';
                             }}
                           />
@@ -1410,12 +1567,11 @@ function App() {
               </div>
               <div className="card-body">
                 <form onSubmit={handleSaveConfigSubmit}>
-                  {/* Meta Access Credentials (SaaS Facebook Connect selector panel) */}
+                  {/* Meta Access Credentials */}
                   <div className="form-section">
                     <h4><i className="fab fa-facebook-f"></i> Instagram Business Integration</h4>
                     
                     {config.instagramUsername ? (
-                      // Display Active Connected Account details
                       <div className="alert-box alert-success" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '15px 20px', marginBottom: '25px', borderRadius: '12px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                           <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-glow)', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1433,7 +1589,6 @@ function App() {
                         </button>
                       </div>
                     ) : (
-                      // Unconnected flow
                       <div style={{ textAlign: 'center', padding: '30px 20px', background: 'rgba(255,255,255,0.01)', border: '1px dashed var(--border-glow)', borderRadius: '12px', marginBottom: '25px' }}>
                         {connectedPages.length === 0 ? (
                           <>
@@ -1447,7 +1602,6 @@ function App() {
                             </button>
                           </>
                         ) : (
-                          // Page selection list
                           <div style={{ textAlign: 'left' }}>
                             <h4 style={{ fontFamily: 'Space Grotesk', fontSize: '1.05rem', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
                               <i className="fas fa-tasks" style={{ color: 'var(--accent-pink)' }}></i>
@@ -1476,7 +1630,6 @@ function App() {
                       </div>
                     )}
                     
-                    {/* Public Verify Token (Still visible for webhook reference) */}
                     <div className="form-group">
                       <label htmlFor="verifyToken">Webhook Verify Token</label>
                       <input 
