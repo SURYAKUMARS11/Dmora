@@ -229,6 +229,7 @@ function App() {
         showToast(`Bot activated successfully for @${page.instagramAccount.username}!`, 'success');
         setConfig(data.config);
         setConnectedPages([]); // Clear list
+        loadMedia(); // Load reels dynamically on successful link
       } else {
         showToast(data.error || 'Activation failed', 'error');
       }
@@ -915,6 +916,9 @@ function App() {
     );
   };
 
+  // Onboarding lock screen: Blocks regular UI if logged in but Instagram not integrated
+  const showOnboardingLock = isAuthenticated && !config.instagramUsername;
+
   // ---------------------------------------------------------
   // RENDER: Unauthenticated Setup & Registration / Login
   // ---------------------------------------------------------
@@ -1103,13 +1107,94 @@ function App() {
   }
 
   // ---------------------------------------------------------
+  // RENDER: SaaS Onboarding Popup (Locks regular UI until Instagram is linked)
+  // ---------------------------------------------------------
+  if (showOnboardingLock) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px', position: 'relative' }}>
+        <div className="card" style={{ maxWidth: '520px', width: '100%', padding: '40px 30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)', position: 'relative', zIndex: 10 }}>
+          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <div style={{ width: '80px', height: '80px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto' }}>
+              <i className="fab fa-instagram gradient-icon" style={{ fontSize: '2.5rem' }}></i>
+            </div>
+            <h2 style={{ fontFamily: 'Space Grotesk', fontSize: '1.5rem', fontWeight: '800', marginBottom: '10px' }}>Integrate Instagram with Dmora</h2>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: '1.45' }}>
+              Automate comment replies and send interactive direct messages instantly. Link your account to launch your dashboard.
+            </p>
+          </div>
+
+          {connectedPages.length === 0 ? (
+            <div style={{ textAlign: 'center' }}>
+              {isFetchingPages ? (
+                <div style={{ padding: '20px 0' }}>
+                  <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '2rem', color: 'var(--accent-pink)', marginBottom: '10px' }}></i>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Retrieving connected pages from Meta...</p>
+                </div>
+              ) : (
+                <>
+                  <button onClick={handleFacebookConnect} className="btn btn-gradient btn-full" style={{ padding: '14px 20px', fontSize: '0.95rem' }}>
+                    <i className="fab fa-facebook-f"></i> Connect Instagram Account
+                  </button>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '15px', lineHeight: '1.3' }}>
+                    Requires a Facebook Page linked to your Instagram professional (creator or business) account.
+                  </p>
+                </>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h4 style={{ fontFamily: 'Space Grotesk', fontSize: '1rem', marginBottom: '15px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <i className="fas fa-check-circle" style={{ color: 'var(--color-success)' }}></i> Select Instagram Page to Automate:
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '240px', overflowY: 'auto', paddingRight: '5px' }}>
+                {connectedPages.map((page) => (
+                  <div key={page.pageId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 15px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-grad)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <i className="fab fa-instagram" style={{ color: 'white', fontSize: '1rem' }}></i>
+                      </div>
+                      <div style={{ overflow: 'hidden' }}>
+                        <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)', display: 'block', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{page.instagramAccount.name}</strong>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>@{page.instagramAccount.username}</span>
+                      </div>
+                    </div>
+                    <button type="button" onClick={() => handleActivatePage(page)} className="btn btn-gradient btn-sm" style={{ flexShrink: 0 }}>
+                      Activate
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div style={{ borderTop: '1px solid var(--border-color)', marginTop: '30px', paddingTop: '15px', display: 'flex', justifyContent: 'center' }}>
+            <button onClick={handleLogout} className="btn btn-secondary btn-sm" style={{ borderColor: 'rgba(255,23,68,0.15)', color: 'var(--color-error)' }}>
+              <i className="fas fa-sign-out-alt"></i> Log Out
+            </button>
+          </div>
+        </div>
+        {toast.show && (
+          <div className={`toast toast-${toast.type}`}>
+            <i className={
+              toast.type === 'success' ? 'fas fa-check-circle' :
+              toast.type === 'error' ? 'fas fa-exclamation-triangle' :
+              'fas fa-info-circle'
+            }></i>
+            <span>{toast.message}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------
   // RENDER: Authenticated Dashboard (Main Layout)
   // ---------------------------------------------------------
   return (
     <div className="container">
       {/* Sidebar Navigation */}
       <aside className="sidebar">
-        <div className="brand">
+        <div className="brand" style={{ marginBottom: '25px' }}>
           <div className="brand-logo">
             <i className="fab fa-instagram gradient-icon"></i>
           </div>
@@ -1118,13 +1203,58 @@ function App() {
             <span>Auto-DM & Reply</span>
           </div>
         </div>
+
+        {/* Sidebar connected channel card widget (SendDM reference style) */}
+        {config.instagramUsername && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid var(--border-color)',
+            padding: '12px',
+            borderRadius: '10px',
+            marginBottom: '25px',
+            width: '100%'
+          }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: 'var(--accent-grad)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              <i className="fab fa-instagram" style={{ color: 'white', fontSize: '1.1rem' }}></i>
+            </div>
+            <div style={{ overflow: 'hidden', flexGrow: 1 }}>
+              <strong style={{ fontSize: '0.82rem', display: 'block', color: 'var(--text-primary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                @{config.instagramUsername}
+              </strong>
+              <span style={{ fontSize: '0.68rem', display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                {userProfile?.name?.split(' ')[0] || 'Creator'} 
+                <span style={{
+                  background: userProfile?.tier === 'pro' ? 'rgba(0,230,118,0.15)' : 'rgba(213,63,140,0.15)',
+                  color: userProfile?.tier === 'pro' ? 'var(--color-success)' : 'var(--accent-pink)',
+                  padding: '1px 5px',
+                  borderRadius: '3px',
+                  fontSize: '0.58rem',
+                  fontWeight: '700',
+                  textTransform: 'uppercase'
+                }}>{userProfile?.tier || 'free'}</span>
+              </span>
+            </div>
+          </div>
+        )}
         
         <nav className="nav-menu">
           <button 
             className={`nav-item ${activeTab === 'dashboard-tab' ? 'active' : ''}`}
             onClick={() => setActiveTab('dashboard-tab')}
           >
-            <i className="fas fa-chart-line"></i> Dashboard & Logs
+            <i className="fas fa-home"></i> Home
           </button>
           <button 
             className={`nav-item ${activeTab === 'campaigns-tab' ? 'active' : ''}`}
@@ -1136,7 +1266,7 @@ function App() {
             className={`nav-item ${activeTab === 'settings-tab' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings-tab')}
           >
-            <i className="fas fa-sliders-h"></i> Bot Settings
+            <i className="fas fa-cog"></i> Bot Settings
           </button>
           <button 
             className={`nav-item ${activeTab === 'setup-tab' ? 'active' : ''}`}
@@ -1148,7 +1278,7 @@ function App() {
           <button 
             className="nav-item"
             onClick={handleLogout}
-            style={{ marginTop: '30px', color: 'var(--color-error)' }}
+            style={{ marginTop: '20px', color: 'var(--color-error)' }}
           >
             <i className="fas fa-sign-out-alt"></i> Log Out
           </button>
@@ -1156,9 +1286,8 @@ function App() {
 
         {/* Dynamic SaaS Billing Promotion Widget */}
         {userProfile && (
-          <div style={{ marginTop: 'auto', padding: '10px' }}>
+          <div style={{ marginTop: 'auto', padding: '10px 0' }}>
             {userProfile.tier === 'pro' && userProfile.subscriptionStatus === 'active' ? (
-              // Pro Tier active
               <div style={{
                 padding: '14px',
                 borderRadius: '12px',
@@ -1175,17 +1304,19 @@ function App() {
                 </div>
               </div>
             ) : (
-              // Free tier - promote upgrade
               <div style={{
                 padding: '14px',
                 borderRadius: '12px',
                 background: 'rgba(213, 63, 140, 0.06)',
                 border: '1px solid rgba(213, 63, 140, 0.15)'
               }}>
-                <strong style={{ fontSize: '0.85rem', display: 'block', color: 'var(--text-primary)', marginBottom: '4px', fontFamily: 'Space Grotesk' }}>Free Tier Active</strong>
-                <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: '1.3', marginBottom: '10px' }}>
-                  Limit of 1 campaign. Upgrade to unlock unlimited automations.
-                </p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-primary)' }}>DM Limit</span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--accent-pink)', fontWeight: '700' }}>{totalTriggersCount}/1K</span>
+                </div>
+                <div style={{ width: '100%', height: '6px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden', marginBottom: '12px' }}>
+                  <div style={{ width: `${Math.min((totalTriggersCount/1000)*100, 100)}%`, height: '100%', background: 'var(--accent-grad)', borderRadius: '3px' }}></div>
+                </div>
                 <button 
                   onClick={handleUpgradeSubscription} 
                   className="btn btn-gradient btn-sm btn-full"
@@ -1222,19 +1353,30 @@ function App() {
         <header className="app-header">
           <div className="header-title">
             <h1>
-              {activeTab === 'dashboard-tab' && 'Dashboard & Logs'}
+              {activeTab === 'dashboard-tab' && 'Home'}
               {activeTab === 'campaigns-tab' && 'Instagram Campaigns'}
               {activeTab === 'settings-tab' && 'Bot Configuration'}
               {activeTab === 'setup-tab' && 'Integration Setup Guide'}
             </h1>
             <p>
-              {activeTab === 'dashboard-tab' && 'Monitor and test your Instagram interactions in real-time'}
+              {activeTab === 'dashboard-tab' && `Hello, ${userProfile?.name?.split(' ')[0] || 'Creator'}`}
               {activeTab === 'campaigns-tab' && 'Select any post/video from your Instagram account to configure custom comment triggers'}
               {activeTab === 'settings-tab' && 'Configure default keywords, public replies, and private DMs'}
               {activeTab === 'setup-tab' && 'Learn how to link your Facebook Page, generate credentials, and set up webhooks'}
             </p>
           </div>
           <div className="header-actions">
+            {activeTab === 'dashboard-tab' && (
+              <button 
+                className="btn btn-secondary" 
+                onClick={loadMedia} 
+                disabled={isMediaLoading}
+                style={{ minHeight: 'auto', padding: '10px 18px', display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
+                <i className={`fas fa-sync-alt ${isMediaLoading ? 'fa-spin' : ''}`}></i> 
+                Check for new posts
+              </button>
+            )}
             <div className="webhook-indicator">
               <span className="pulse-dot"></span>
               <span className="indicator-text">Webhook Listener Online</span>
@@ -1242,11 +1384,116 @@ function App() {
           </div>
         </header>
 
-        {/* TAB 1: DASHBOARD & LOGS */}
+        {/* TAB 1: HOME PANEL */}
         {activeTab === 'dashboard-tab' && (
           <section className="tab-content active">
-            {/* Stats Overview Grid */}
-            <div className="stats-grid">
+            {/* Quick Greeting & Channel Info */}
+            <div style={{ marginBottom: '25px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h2 style={{ fontFamily: 'Space Grotesk', fontSize: '1.8rem', fontWeight: '800' }}>Hello, {userProfile?.name || 'Creator'}</h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginTop: '4px' }}>
+                  1 connected channel &bull;{' '}
+                  <span 
+                    style={{ color: 'var(--accent-pink)', cursor: 'pointer', fontWeight: '600' }} 
+                    onClick={() => setActiveTab('settings-tab')}
+                  >
+                    See Insights
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Learn how to use Dmora Banner */}
+            <div className="card" style={{ display: 'flex', flexDirection: 'row', gap: '24px', padding: '24px', marginBottom: '30px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div style={{ position: 'relative', width: '200px', height: '110px', borderRadius: '10px', overflow: 'hidden', flexShrink: 0 }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&auto=format&fit=crop" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  alt="Tutorial Preview" 
+                />
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <i className="fas fa-play" style={{ color: 'white', fontSize: '1.8rem', filter: 'drop-shadow(0 3px 5px rgba(0,0,0,0.3))' }}></i>
+                </div>
+              </div>
+              <div style={{ flexGrow: 1, minWidth: '240px' }}>
+                <h3 style={{ fontFamily: 'Space Grotesk', fontSize: '1.25rem', marginBottom: '6px', fontWeight: '700' }}>Learn how to use Dmora</h3>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '14px', lineHeight: '1.4' }}>
+                  Quick video guides to get your comment automations and DMs live in under 5 minutes.
+                </p>
+                <div style={{ display: 'flex', gap: '15px' }}>
+                  <a href="https://youtube.com" target="_blank" rel="noreferrer" className="btn btn-gradient btn-sm" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>
+                    <i className="fas fa-play"></i> Watch now
+                  </a>
+                  <button onClick={() => setActiveTab('setup-tab')} className="btn btn-secondary btn-sm" style={{ padding: '6px 14px', fontSize: '0.78rem' }}>
+                    See all
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Ready to Setup Carousel/Grid */}
+            <div style={{ marginBottom: '35px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ fontFamily: 'Space Grotesk', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Ready to Setup 
+                  <span className="badge" style={{ background: 'rgba(213,63,140,0.15)', color: 'var(--accent-pink)', border: '1px solid rgba(213,63,140,0.2)', padding: '2px 8px', borderRadius: '10px' }}>
+                    {mediaList.length}
+                  </span>
+                </h3>
+                <button className="btn btn-secondary btn-sm" style={{ minWidth: 'auto', padding: '6px 12px' }} onClick={() => setActiveTab('campaigns-tab')}>
+                  View All <i className="fas fa-arrow-right" style={{ marginLeft: '4px' }}></i>
+                </button>
+              </div>
+
+              <div className="posts-carousel" style={{ display: 'flex', gap: '20px', overflowX: 'auto', paddingBottom: '12px' }}>
+                {mediaList.length === 0 ? (
+                  <div className="empty-logs" style={{ width: '100%', padding: '40px 0' }}>
+                    <i className="fas fa-photo-video"></i>
+                    <p>No Instagram posts retrieved. Click check for posts above to pull media.</p>
+                  </div>
+                ) : (
+                  mediaList.slice(0, 8).map((post) => {
+                    const campaignRule = campaigns.find(c => c.mediaId === post.id);
+                    return (
+                      <div key={post.id} className="post-card" style={{ width: '250px', flexShrink: 0, margin: 0 }}>
+                        <div className="post-media-container" style={{ height: '220px' }}>
+                          {campaignRule ? (
+                            <span className="post-badge active-automation">Active</span>
+                          ) : (
+                            <span className="post-badge no-automation">Ready</span>
+                          )}
+                          <img 
+                            src={getMediaSrc(post)} 
+                            alt="Post" 
+                            onError={(e) => {
+                              e.target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop';
+                            }}
+                          />
+                        </div>
+                        <div className="post-card-content" style={{ padding: '14px' }}>
+                          <p className="post-caption" style={{ fontSize: '0.8rem', height: '36px', overflow: 'hidden', marginBottom: '10px', WebkitLineClamp: 2, display: '-webkit-box', WebkitBoxOrient: 'vertical', lineHeight: '1.25' }}>
+                            {post.caption || 'No caption'}
+                          </p>
+                          
+                          <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.78rem', marginBottom: '12px' }}>
+                            <span><i className="far fa-heart" style={{ color: 'var(--accent-pink)', marginRight: '4px' }}></i>{post.like_count || 0}</span>
+                            <span><i className="far fa-comment" style={{ color: 'var(--color-info)', marginRight: '4px' }}></i>{post.comments_count || 0}</span>
+                          </div>
+                          
+                          <button onClick={() => openModal(post)} className={`btn btn-sm btn-full ${campaignRule ? 'btn-primary' : 'btn-gradient'}`} style={{ minHeight: 'auto', padding: '8px' }}>
+                            <i className={campaignRule ? 'fas fa-cog' : 'fas fa-bolt'} style={{ marginRight: '6px' }}></i>
+                            {campaignRule ? 'Manage' : 'Setup Auto-DM'}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
+            {/* Stats Overview Panel */}
+            <div className="stats-grid" style={{ marginBottom: '30px' }}>
               <div className="stat-card">
                 <div className="stat-icon purple-glow"><i className="fas fa-comment-dots"></i></div>
                 <div className="stat-info">
@@ -1423,16 +1670,6 @@ function App() {
                       <i className="fas fa-play"></i> Run Test Trigger
                     </button>
                   </form>
-                  
-                  {!config.pageAccessToken && (
-                    <div className="alert-box alert-warning" style={{ marginTop: '20px' }}>
-                      <i className="fas fa-exclamation-triangle"></i>
-                      <div>
-                        <strong>Access Token Missing!</strong>
-                        <p>Simulated checking will work, but real API calls to Instagram will fail until you connect your Instagram account in Settings.</p>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
