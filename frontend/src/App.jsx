@@ -726,7 +726,7 @@ function App() {
               <i className="fab fa-instagram gradient-icon"></i>
             </div>
             <div className="brand-name">
-              <h2>InstaResponder</h2>
+              <h2>Dmora</h2>
               <span>Secure Setup</span>
             </div>
           </div>
@@ -810,7 +810,7 @@ function App() {
               <i className="fab fa-instagram gradient-icon"></i>
             </div>
             <div className="brand-name">
-              <h2>InstaResponder</h2>
+              <h2>Dmora</h2>
               <span>Locked Panel</span>
             </div>
           </div>
@@ -880,7 +880,7 @@ function App() {
             <i className="fab fa-instagram gradient-icon"></i>
           </div>
           <div className="brand-name">
-            <h2>InstaResponder</h2>
+            <h2>Dmora</h2>
             <span>Auto-DM & Reply</span>
           </div>
         </div>
