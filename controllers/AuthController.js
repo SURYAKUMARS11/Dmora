@@ -1,57 +1,60 @@
 const User = require('../models/User');
+const Config = require('../models/Config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { addLog } = require('../utils/logger');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'my_jwt_super_secret_token_change_this';
 
-// 1. Check if admin exists
-exports.getAuthStatus = async (req, res) => {
+// 1. User Registration (SaaS Sign-up)
+exports.register = async (req, res) => {
   try {
-    const adminCount = await User.countDocuments({ role: 'admin' });
-    res.json({ exists: adminCount > 0 });
-  } catch (error) {
-    console.error('Error checking auth status:', error);
-    res.status(500).json({ success: false, error: 'Server error' });
-  }
-};
-
-// 2. Setup first admin account
-exports.setupAdmin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ success: false, error: 'Email and password are required' });
     }
 
-    const adminExists = await User.countDocuments({ role: 'admin' });
-    if (adminExists > 0) {
-      return res.status(400).json({ success: false, error: 'Admin account has already been configured' });
+    // Check if email already registered
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(400).json({ success: false, error: 'An account with this email already exists' });
     }
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newAdmin = new User({
-      email,
+    // Create User
+    const newUser = new User({
+      name: name || '',
+      email: email.toLowerCase(),
       password: hashedPassword,
-      role: 'admin'
+      role: 'user',
+      tier: 'free',
+      subscriptionStatus: 'inactive'
     });
 
-    await newAdmin.save();
-    addLog('success', `Admin account created successfully: ${email}`);
+    await newUser.save();
+
+    // Initialize Default User Configuration
+    const newConfig = new Config({
+      userId: newUser._id
+    });
+    await newConfig.save();
+
+    // Log success
+    addLog(newUser._id, 'success', `User account registered: ${email}`);
 
     // Generate JWT
-    const token = jwt.sign({ id: newAdmin._id, role: newAdmin.role }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: newUser._id, role: newUser.role }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ success: true, token });
   } catch (error) {
-    console.error('Error setting up admin account:', error);
+    console.error('Error during registration:', error);
     res.status(500).json({ success: false, error: 'Server error' });
   }
 };
 
-// 3. User Login
+// 2. User Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -61,18 +64,17 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      addLog('warning', `Failed login attempt: Account not found for ${email}`);
       return res.status(400).json({ success: false, error: 'Invalid login credentials' });
     }
 
     // Verify Password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      addLog('warning', `Failed login attempt: Incorrect password for ${email}`);
       return res.status(400).json({ success: false, error: 'Invalid login credentials' });
     }
 
-    addLog('success', `Admin logged in successfully: ${email}`);
+    // Log success
+    addLog(user._id, 'success', `User logged in successfully: ${email}`);
 
     // Generate JWT
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
@@ -83,7 +85,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// 4. JWT Verification Middleware
+// 3. JWT Verification Middleware
 exports.verifyToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   if (!authHeader) {

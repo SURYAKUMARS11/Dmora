@@ -4,9 +4,10 @@ function App() {
   // Authentication State
   const [token, setToken] = useState(localStorage.getItem('adminToken') || '');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminToken'));
-  const [adminExists, setAdminExists] = useState(null); // null = loading, true/false = status
+  const [isRegistering, setIsRegistering] = useState(false); // Toggle signup vs login
 
   // Form Inputs for Auth
+  const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authConfirmPassword, setAuthConfirmPassword] = useState('');
@@ -103,22 +104,8 @@ function App() {
     return res;
   };
 
-  // Check auth status
-  const checkAuthStatus = async () => {
-    try {
-      const res = await fetch('/api/auth/status');
-      if (res.ok) {
-        const data = await res.json();
-        setAdminExists(data.exists);
-      }
-    } catch (e) {
-      console.error('Error checking auth status:', e);
-      setAdminExists(false); // fallback
-    }
-  };
-
-  // Handle Admin Setup Submit
-  const handleSetupAdminSubmit = async (e) => {
+  // Handle User Registration
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (authPassword !== authConfirmPassword) {
       showToast('Passwords do not match!', 'error');
@@ -126,10 +113,10 @@ function App() {
     }
 
     try {
-      const res = await fetch('/api/auth/setup', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: authEmail, password: authPassword })
+        body: JSON.stringify({ name: authName, email: authEmail, password: authPassword })
       });
       
       const data = await res.json();
@@ -137,17 +124,16 @@ function App() {
         localStorage.setItem('adminToken', data.token);
         setToken(data.token);
         setIsAuthenticated(true);
-        setAdminExists(true);
-        showToast('Admin account set up successfully!', 'success');
+        showToast('Account registered successfully!', 'success');
       } else {
-        showToast(data.error || 'Failed to setup admin account', 'error');
+        showToast(data.error || 'Failed to register account', 'error');
       }
     } catch (err) {
-      showToast('Connection error during setup', 'error');
+      showToast('Connection error during registration', 'error');
     }
   };
 
-  // Handle Admin Login Submit
+  // Handle User Login
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -248,11 +234,6 @@ function App() {
       console.error('Error loading analytics:', e);
     }
   };
-
-  // Run on mount
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
 
   // Fetch data when authenticated
   useEffect(() => {
@@ -703,169 +684,190 @@ function App() {
   };
 
   // ---------------------------------------------------------
-  // RENDER: Loading State
+  // RENDER: Unauthenticated Setup & Registration / Login
   // ---------------------------------------------------------
-  if (adminExists === null) {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-        <i className="fas fa-circle-notch fa-spin" style={{ fontSize: '2.5rem', color: 'var(--accent-pink)', marginBottom: '15px' }}></i>
-        <p style={{ fontFamily: 'Space Grotesk', fontWeight: '500', letterSpacing: '0.5px' }}>Initializing Access Control...</p>
-      </div>
-    );
-  }
+  if (!isAuthenticated) {
+    if (isRegistering) {
+      // RENDER: SaaS Registration (Sign-up)
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+          <div className="card" style={{ maxWidth: '420px', width: '100%', padding: '30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)' }}>
+            <div className="brand" style={{ justifyContent: 'center', marginBottom: '30px' }}>
+              <div className="brand-logo">
+                <i className="fab fa-instagram gradient-icon"></i>
+              </div>
+              <div className="brand-name">
+                <h2>Dmora</h2>
+                <span>Create Account</span>
+              </div>
+            </div>
+            
+            <h3 style={{ fontFamily: 'Space Grotesk', marginBottom: '10px', textAlign: 'center', fontSize: '1.25rem' }}>Get Started with Dmora</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '25px', lineHeight: 1.45 }}>
+              Create your account to automate your Instagram comments and grow your audience.
+            </p>
 
-  // ---------------------------------------------------------
-  // RENDER: First Time Admin Setup
-  // ---------------------------------------------------------
-  if (!isAuthenticated && adminExists === false) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
-        <div className="card" style={{ maxWidth: '420px', width: '100%', padding: '30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)' }}>
-          <div className="brand" style={{ justifyContent: 'center', marginBottom: '30px' }}>
-            <div className="brand-logo">
-              <i className="fab fa-instagram gradient-icon"></i>
-            </div>
-            <div className="brand-name">
-              <h2>Dmora</h2>
-              <span>Secure Setup</span>
-            </div>
+            <form onSubmit={handleRegisterSubmit} className="form-grid">
+              <div className="form-group">
+                <label htmlFor="reg-name">Your Full Name</label>
+                <div className="input-icon">
+                  <i className="fas fa-user"></i>
+                  <input 
+                    type="text" 
+                    id="reg-name" 
+                    value={authName} 
+                    onChange={(e) => setAuthName(e.target.value)} 
+                    required 
+                    placeholder="John Doe"
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="reg-email">Email Address</label>
+                <div className="input-icon">
+                  <i className="fas fa-envelope"></i>
+                  <input 
+                    type="email" 
+                    id="reg-email" 
+                    value={authEmail} 
+                    onChange={(e) => setAuthEmail(e.target.value)} 
+                    required 
+                    placeholder="john@example.com"
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="reg-password">Choose Password</label>
+                <div className="input-icon">
+                  <i className="fas fa-lock"></i>
+                  <input 
+                    type="password" 
+                    id="reg-password" 
+                    value={authPassword} 
+                    onChange={(e) => setAuthPassword(e.target.value)} 
+                    required 
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+              <div className="form-group" style={{ marginBottom: '10px' }}>
+                <label htmlFor="reg-password-confirm">Confirm Password</label>
+                <div className="input-icon">
+                  <i className="fas fa-lock"></i>
+                  <input 
+                    type="password" 
+                    id="reg-password-confirm" 
+                    value={authConfirmPassword} 
+                    onChange={(e) => setAuthConfirmPassword(e.target.value)} 
+                    required 
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+              <button type="submit" className="btn btn-gradient btn-full">
+                <i className="fas fa-user-plus"></i> Sign Up for Free
+              </button>
+            </form>
+
+            <p style={{ marginTop: '20px', fontSize: '0.82rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+              Already have an account?{' '}
+              <span 
+                style={{ color: 'var(--accent-pink)', cursor: 'pointer', fontWeight: '600' }} 
+                onClick={() => setIsRegistering(false)}
+              >
+                Log in here
+              </span>
+            </p>
           </div>
-          
-          <h3 style={{ fontFamily: 'Space Grotesk', marginBottom: '10px', textAlign: 'center', fontSize: '1.25rem' }}>Create Admin Account</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '25px', lineHeight: 1.45 }}>
-            Initialize your self-hosted dashboard. Set up an administrative email and password to prevent unauthorized access.
-          </p>
-
-          <form onSubmit={handleSetupAdminSubmit} className="form-grid">
-            <div className="form-group">
-              <label htmlFor="setup-email">Admin Email Address</label>
-              <div className="input-icon">
-                <i className="fas fa-envelope"></i>
-                <input 
-                  type="email" 
-                  id="setup-email" 
-                  value={authEmail} 
-                  onChange={(e) => setAuthEmail(e.target.value)} 
-                  required 
-                  placeholder="admin@example.com"
-                />
-              </div>
+          {toast.show && (
+            <div className={`toast toast-${toast.type}`}>
+              <i className={
+                toast.type === 'success' ? 'fas fa-check-circle' :
+                toast.type === 'error' ? 'fas fa-exclamation-triangle' :
+                'fas fa-info-circle'
+              }></i>
+              <span>{toast.message}</span>
             </div>
-            <div className="form-group">
-              <label htmlFor="setup-password">Secure Password</label>
-              <div className="input-icon">
-                <i className="fas fa-lock"></i>
-                <input 
-                  type="password" 
-                  id="setup-password" 
-                  value={authPassword} 
-                  onChange={(e) => setAuthPassword(e.target.value)} 
-                  required 
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-            <div className="form-group" style={{ marginBottom: '10px' }}>
-              <label htmlFor="setup-password-confirm">Confirm Password</label>
-              <div className="input-icon">
-                <i className="fas fa-lock"></i>
-                <input 
-                  type="password" 
-                  id="setup-password-confirm" 
-                  value={authConfirmPassword} 
-                  onChange={(e) => setAuthConfirmPassword(e.target.value)} 
-                  required 
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-            <button type="submit" className="btn btn-gradient btn-full">
-              <i className="fas fa-user-plus"></i> Initialize Account
-            </button>
-          </form>
+          )}
         </div>
-        {toast.show && (
-          <div className={`toast toast-${toast.type}`}>
-            <i className={
-              toast.type === 'success' ? 'fas fa-check-circle' :
-              toast.type === 'error' ? 'fas fa-exclamation-triangle' :
-              'fas fa-info-circle'
-            }></i>
-            <span>{toast.message}</span>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // ---------------------------------------------------------
-  // RENDER: Admin Login
-  // ---------------------------------------------------------
-  if (!isAuthenticated && adminExists === true) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
-        <div className="card" style={{ maxWidth: '420px', width: '100%', padding: '30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)' }}>
-          <div className="brand" style={{ justifyContent: 'center', marginBottom: '30px' }}>
-            <div className="brand-logo">
-              <i className="fab fa-instagram gradient-icon"></i>
-            </div>
-            <div className="brand-name">
-              <h2>Dmora</h2>
-              <span>Locked Panel</span>
-            </div>
-          </div>
-          
-          <h3 style={{ fontFamily: 'Space Grotesk', marginBottom: '10px', textAlign: 'center', fontSize: '1.25rem' }}>Admin Dashboard Login</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '25px' }}>
-            Enter your credentials to unlock settings.
-          </p>
-
-          <form onSubmit={handleLoginSubmit} className="form-grid">
-            <div className="form-group">
-              <label htmlFor="login-email">Email Address</label>
-              <div className="input-icon">
-                <i className="fas fa-envelope"></i>
-                <input 
-                  type="email" 
-                  id="login-email" 
-                  value={authEmail} 
-                  onChange={(e) => setAuthEmail(e.target.value)} 
-                  required 
-                  placeholder="admin@example.com"
-                />
+      );
+    } else {
+      // RENDER: SaaS Login
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
+          <div className="card" style={{ maxWidth: '420px', width: '100%', padding: '30px', border: '1px solid var(--border-glow)', boxShadow: 'var(--shadow-glow)' }}>
+            <div className="brand" style={{ justifyContent: 'center', marginBottom: '30px' }}>
+              <div className="brand-logo">
+                <i className="fab fa-instagram gradient-icon"></i>
+              </div>
+              <div className="brand-name">
+                <h2>Dmora</h2>
+                <span>Portal Access</span>
               </div>
             </div>
-            <div className="form-group" style={{ marginBottom: '10px' }}>
-              <label htmlFor="login-password">Password</label>
-              <div className="input-icon">
-                <i className="fas fa-lock"></i>
-                <input 
-                  type="password" 
-                  id="login-password" 
-                  value={authPassword} 
-                  onChange={(e) => setAuthPassword(e.target.value)} 
-                  required 
-                  placeholder="••••••••"
-                />
+            
+            <h3 style={{ fontFamily: 'Space Grotesk', marginBottom: '10px', textAlign: 'center', fontSize: '1.25rem' }}>Login to Dashboard</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '25px' }}>
+              Enter your credentials to manage your automations.
+            </p>
+
+            <form onSubmit={handleLoginSubmit} className="form-grid">
+              <div className="form-group">
+                <label htmlFor="login-email">Email Address</label>
+                <div className="input-icon">
+                  <i className="fas fa-envelope"></i>
+                  <input 
+                    type="email" 
+                    id="login-email" 
+                    value={authEmail} 
+                    onChange={(e) => setAuthEmail(e.target.value)} 
+                    required 
+                    placeholder="john@example.com"
+                  />
+                </div>
               </div>
+              <div className="form-group" style={{ marginBottom: '10px' }}>
+                <label htmlFor="login-password">Password</label>
+                <div className="input-icon">
+                  <i className="fas fa-lock"></i>
+                  <input 
+                    type="password" 
+                    id="login-password" 
+                    value={authPassword} 
+                    onChange={(e) => setAuthPassword(e.target.value)} 
+                    required 
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+              <button type="submit" className="btn btn-gradient btn-full">
+                <i className="fas fa-sign-in-alt"></i> Access Dashboard
+              </button>
+            </form>
+
+            <p style={{ marginTop: '20px', fontSize: '0.82rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+              Don't have an account?{' '}
+              <span 
+                style={{ color: 'var(--accent-pink)', cursor: 'pointer', fontWeight: '600' }} 
+                onClick={() => setIsRegistering(true)}
+              >
+                Sign up here
+              </span>
+            </p>
+          </div>
+          {toast.show && (
+            <div className={`toast toast-${toast.type}`}>
+              <i className={
+                toast.type === 'success' ? 'fas fa-check-circle' :
+                toast.type === 'error' ? 'fas fa-exclamation-triangle' :
+                'fas fa-info-circle'
+              }></i>
+              <span>{toast.message}</span>
             </div>
-            <button type="submit" className="btn btn-gradient btn-full">
-              <i className="fas fa-sign-in-alt"></i> Unlock Dashboard
-            </button>
-          </form>
+          )}
         </div>
-        {toast.show && (
-          <div className={`toast toast-${toast.type}`}>
-            <i className={
-              toast.type === 'success' ? 'fas fa-check-circle' :
-              toast.type === 'error' ? 'fas fa-exclamation-triangle' :
-              'fas fa-info-circle'
-            }></i>
-            <span>{toast.message}</span>
-          </div>
-        )}
-      </div>
-    );
+      );
+    }
   }
 
   // ---------------------------------------------------------

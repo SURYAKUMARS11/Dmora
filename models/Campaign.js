@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const CampaignSchema = new mongoose.Schema({
-  accountId: {
-    type: String,
-    default: 'default'
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   name: {
     type: String,
@@ -79,7 +80,7 @@ const CampaignSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Create compound index for accountId + mediaId
-CampaignSchema.index({ accountId: 1, mediaId: 1 });
+// Create compound index for userId + mediaId
+CampaignSchema.index({ userId: 1, mediaId: 1 });
 
 module.exports = mongoose.model('Campaign', CampaignSchema);

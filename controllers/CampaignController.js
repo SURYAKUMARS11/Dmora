@@ -58,7 +58,7 @@ const MOCK_MEDIA = [
 // GET: Retrieve all campaigns
 exports.getCampaigns = async (req, res) => {
   try {
-    const campaigns = await Campaign.find({ accountId: 'default' });
+    const campaigns = await Campaign.find({ userId: req.user.id });
     res.json(campaigns);
   } catch (error) {
     console.error('Error fetching campaigns:', error);
@@ -69,6 +69,7 @@ exports.getCampaigns = async (req, res) => {
 // POST: Save or Update Campaign
 exports.saveCampaign = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { 
       id, name, mediaId, keywords, triggerOnAny, publicReply, privateDM, 
       requireFollow, followFallbackDM, isEnabled,
@@ -85,7 +86,7 @@ exports.saveCampaign = async (req, res) => {
 
     let campaign;
     if (id) {
-      campaign = await Campaign.findOne({ _id: id, accountId: 'default' });
+      campaign = await Campaign.findOne({ _id: id, userId });
       if (campaign) {
         campaign.name = name;
         campaign.mediaId = mediaId;
@@ -104,7 +105,7 @@ exports.saveCampaign = async (req, res) => {
         campaign.useRichCard = !!useRichCard;
         
         await campaign.save();
-        addLog('info', `Campaign "${name}" updated`);
+        addLog(userId, 'info', `Campaign "${name}" updated`);
       } else {
         return res.status(404).json({ success: false, error: 'Campaign not found' });
       }
@@ -125,14 +126,14 @@ exports.saveCampaign = async (req, res) => {
         cardButtonText: cardButtonText || '',
         cardButtonUrl: cardButtonUrl || '',
         useRichCard: !!useRichCard,
-        accountId: 'default'
+        userId
       });
       
       await campaign.save();
-      addLog('info', `New campaign "${name}" created`);
+      addLog(userId, 'info', `New campaign "${name}" created`);
     }
 
-    const campaignsList = await Campaign.find({ accountId: 'default' });
+    const campaignsList = await Campaign.find({ userId });
     res.json({ success: true, rules: campaignsList });
   } catch (error) {
     console.error('Error saving campaign:', error);
@@ -143,12 +144,13 @@ exports.saveCampaign = async (req, res) => {
 // DELETE: Delete a campaign
 exports.deleteCampaign = async (req, res) => {
   try {
+    const userId = req.user.id;
     const id = req.params.id;
-    const result = await Campaign.deleteOne({ _id: id, accountId: 'default' });
+    const result = await Campaign.deleteOne({ _id: id, userId });
     
     if (result.deletedCount > 0) {
-      addLog('info', `Campaign with ID ${id} deleted`);
-      const campaignsList = await Campaign.find({ accountId: 'default' });
+      addLog(userId, 'info', `Campaign with ID ${id} deleted`);
+      const campaignsList = await Campaign.find({ userId });
       res.json({ success: true, rules: campaignsList });
     } else {
       res.status(404).json({ success: false, error: 'Campaign not found' });
@@ -162,7 +164,8 @@ exports.deleteCampaign = async (req, res) => {
 // GET: Retrieve Instagram Media (Live or Mock fallback)
 exports.getInstagramMedia = async (req, res) => {
   try {
-    const config = await Config.findOne({ accountId: 'default' });
+    const userId = req.user.id;
+    const config = await Config.findOne({ userId });
     
     if (!config || !config.pageAccessToken) {
       return res.json({ success: true, isMock: true, data: MOCK_MEDIA });

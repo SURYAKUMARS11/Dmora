@@ -9,8 +9,7 @@ const AuthController = require('../controllers/AuthController');
 const AnalyticsController = require('../controllers/AnalyticsController');
 
 // Public Authentication Routes
-router.get('/auth/status', AuthController.getAuthStatus);
-router.post('/auth/setup', AuthController.setupAdmin);
+router.post('/auth/register', AuthController.register);
 router.post('/auth/login', AuthController.login);
 router.get('/health', (req, res) => res.json({ status: 'ok' }));
 

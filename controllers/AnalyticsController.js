@@ -1,16 +1,18 @@
 const Log = require('../models/Log');
 const Campaign = require('../models/Campaign');
 
-// GET: Retrieve overall 7-day trend and post-specific campaign analytics
+// GET: Retrieve overall 7-day trend and post-specific campaign analytics for user
 exports.getAnalytics = async (req, res) => {
   try {
+    const userId = req.user.id;
+    
     // 1. Get overall 7-day daily activity trend
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     sevenDaysAgo.setHours(0, 0, 0, 0);
 
     const logs = await Log.find({
-      accountId: 'default',
+      userId,
       timestamp: { $gte: sevenDaysAgo },
       type: { $in: ['success', 'error'] }
     });
@@ -36,7 +38,7 @@ exports.getAnalytics = async (req, res) => {
     const trend = Object.values(dailyData);
 
     // 2. Get post-specific automation analytics
-    const campaigns = await Campaign.find({ accountId: 'default' })
+    const campaigns = await Campaign.find({ userId })
       .select('name mediaId triggerCount successCount errorCount')
       .sort({ triggerCount: -1 });
 

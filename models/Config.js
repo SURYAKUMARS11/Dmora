@@ -1,10 +1,19 @@
 const mongoose = require('mongoose');
 
 const ConfigSchema = new mongoose.Schema({
-  accountId: {
-    type: String,
-    default: 'default',
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
     unique: true
+  },
+  facebookPageId: {
+    type: String,
+    default: ''
+  },
+  instagramBusinessId: {
+    type: String,
+    default: ''
   },
   pageAccessToken: {
     type: String,

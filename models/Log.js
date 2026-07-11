@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const LogSchema = new mongoose.Schema({
-  accountId: {
-    type: String,
-    default: 'default'
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   timestamp: {
     type: Date,
@@ -25,6 +26,6 @@ const LogSchema = new mongoose.Schema({
 });
 
 // Index logs by timestamp desc for fast polling queries
-LogSchema.index({ accountId: 1, timestamp: -1 });
+LogSchema.index({ userId: 1, timestamp: -1 });
 
 module.exports = mongoose.model('Log', LogSchema);
